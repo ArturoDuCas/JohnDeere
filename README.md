@@ -1,11 +1,5 @@
 # JohnDeere
-<p align="center">
-    <img src="logo.png">
-</p>
 
-<h2 align="center"> 
-    Proyecto John Deere
-<h2>
 
 <p align="center">
     <a href="https://github.com/prettier/prettier">
