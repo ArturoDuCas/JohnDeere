@@ -9,7 +9,7 @@
 
 <p align="center">
     <a href="https://github.com/prettier/prettier">
-        <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square">
+        <img alt="code style: prettier" src="https://www.deere.es/assets/images/region-2/products/combines/John-Deere-combine-harvester-X-Series.jpg">
     </a>
 </p>
 
