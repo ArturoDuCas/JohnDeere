@@ -4,7 +4,7 @@
 </p>
 
 <h2 align="center"> 
-    A major redesign of the traditional Tec's primary satisfaction survey: ECOA
+    Proyecto John Deere
 <h2>
 
 <p align="center">
