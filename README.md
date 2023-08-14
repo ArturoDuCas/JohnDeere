@@ -12,10 +12,9 @@
 
 # 📑 Documents
 
-- 📦 [Google Drive Folder]([https://drive.google.com/drive/folders/18pnYM_UuBCcxaX-H8bqIiA9n4d28qxLd?usp=sharing](https://drive.google.com/drive/u/0/folders/0AO4tcZIZC3eXUk9PVA))
+- 📦 [Google Drive Folder]()
 - 📷 [Final Presentation Slides]()
-
-- 📦 [Google Drive Folder (Internal-Only)](https://drive.google.com/drive/folders/1D2RHVyTfaO_m26Hka9A1EXCZ5MDTx3B7?usp=sharing)
+- 📦 [Google Drive Folder (Internal-Only)]()
 - 📌 [Rubric (Internal-Only)]()
 - 🥁 [Images & Music References/Credits]()
 
@@ -24,8 +23,11 @@
 
 Team **5**
 
-
+- Arturo Durán A00833516      
+- Oscar Hernandez A01762346  
 - Santiago Velasquez Chang A00832788
+- Daniela Nuño Martinez A01177702
+- Luis Antonio Barajas Ramirez A01235589
 
 
 
