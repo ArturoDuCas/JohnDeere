@@ -16,6 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Message.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WS_Client.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2UAdFnqltgdmhEjc5izttfkh7qa" />
@@ -50,7 +51,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1692386222136</updated>
-      <workItem from="1692386223826" duration="827000" />
+      <workItem from="1692386223826" duration="9438000" />
     </task>
     <servers />
   </component>

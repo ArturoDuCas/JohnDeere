@@ -1,18 +1,32 @@
 using WebSocketSharp; 
 using UnityEngine;
+using System.Text.Json;
+
 
 public class WS_Client : MonoBehaviour
 {
-    private WebSocket ws; 
-    
+    private WebSocket ws;
+
     void Start()
     {
         ws = new WebSocket("ws://localhost:8080");
+
         ws.OnMessage += (sender, e) =>
         {
-            Debug.Log("Message received from " + ((WebSocket)sender).Url + ", Data : " + e.Data);
+            Message message = JsonUtility.FromJson<Message>(e.Data);
+            if (message.type == "connection_info")
+            {
+                Debug.Log("ID: " + message.data);
+            } else if (message.type == "connect")
+            {
+                Debug.Log("Established connection with: " + message.sender);
+            } else
+            {
+                Debug.Log("Mensaje recibido: " + message.data); 
+            }
         };
-        ws.Connect(); 
+        
+        ws.Connect();
     }
     
     void Update()
