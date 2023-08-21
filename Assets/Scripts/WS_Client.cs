@@ -20,6 +20,11 @@ public class WS_Client : MonoBehaviour
             } else if (message.type == "connect")
             {
                 Debug.Log("Established connection with: " + message.sender);
+            } else if (message.type == "field-dimensions")
+            {
+                getFieldDimensions(message.data);
+                Debug.Log(GlobalData.field_xSize.ToString() + GlobalData.field_zSize.ToString());
+
             } else
             {
                 Debug.Log("Mensaje recibido: " + message.data); 
@@ -39,6 +44,24 @@ public class WS_Client : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             ws.Send("Hello");
+        }
+    }
+
+    void getFieldDimensions(string data)
+    {
+        string[] parts = data.Split(',');
+        foreach (string part in parts)
+        {
+            if (part.StartsWith("x:"))
+            {
+                string xValue = part.Substring(2);
+                GlobalData.field_xSize = int.Parse(xValue);
+            }
+            else if (part.StartsWith("z:"))
+            {
+                string zValue = part.Substring(2);
+                GlobalData.field_zSize = int.Parse(zValue);
+            }
         }
     }
 }
