@@ -6,9 +6,9 @@ public class FieldController : MonoBehaviour
 {
     public Vector3 newDimensions = new Vector3(1.0f, 0.0f, 1.0f);
     public GameObject cornPrefab; 
-    public float rowSpacing = 0.7f;
-    public float plantSpacingMin = 0.3f; 
-    public float plantSpacingMax = 0.4f;
+    public float rowSpacing = 1f;
+    public float plantSpacingMin = 0.5f; 
+    public float plantSpacingMax = 0.5f;
     
 
     void Start()
@@ -45,6 +45,7 @@ public class FieldController : MonoBehaviour
             {
                 float xPosition = plant * plantSpacingMin;
                 Vector3 position = new Vector3(xPosition - plantXOffset, 0.0f, zPosition);
+                
                 position += transform.position; // Ajustar la posición global
 
                 Instantiate(cornPrefab, position, Quaternion.identity, transform);
