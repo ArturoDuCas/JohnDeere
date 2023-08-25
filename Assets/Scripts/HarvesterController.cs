@@ -21,7 +21,7 @@ public class HarvesterController : MonoBehaviour
     void Start()
     {
         harvesterTransform = transform;
-        harvesterPosition = new Vector3(-2f, harvesterTransform.localScale.y * 0.5f, harvesterTransform.localScale.z * 0.5f);  // Ajusta el punto de pivote hacia atrás
+        harvesterPosition = new Vector3(-10f, harvesterTransform.localScale.y * 0.5f, harvesterTransform.localScale.z * 0.5f);  // Ajusta el punto de pivote hacia atrás
         harvesterTransform.position = harvesterPosition;
         targetRotation = harvesterTransform.rotation;  // Inicializar la rotación objetivo
     }

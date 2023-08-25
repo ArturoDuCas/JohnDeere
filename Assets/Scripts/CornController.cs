@@ -6,14 +6,12 @@ public class CornController : MonoBehaviour
 {
     void Start()
     {
-        // Posicion actual del maiz
-        Vector3 currentPosition = transform.position;
+        Transform childTransform = transform.GetChild(0); // Get the child transform
 
-        // Ajustar la posición para que la parte inferior toque el suelo (y = 0)
         Vector3 newPosition = transform.position;
-        newPosition.y = 0.8f; // Ajustar la posición vertical a la mitad de la altura
-        
-        
+        // Ajustar la posición para que la parte inferior toque el suelo (y = 0)
+		newPosition.y = childTransform.localScale.y * 0.5f;
+
         transform.position = newPosition;
     }
     

@@ -650,11 +650,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1183ba6e63a5cc42909a0b1fb36c18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newDimensions: {x: 40, y: 0, z: 40}
-  cornPrefab: {fileID: 4854618130561855241, guid: b9095cb91421a7a46adc3fb5a00bfd52, type: 3}
-  rowSpacing: 1
-  plantSpacingMin: 0.5
-  plantSpacingMax: 0.5
+  cornPrefab: {fileID: 99835142273756305, guid: 08e10494b8c537d488572a9964f4ef15, type: 3}
+  largo: 10
+  ancho: 6
 --- !u!64 &1834814358
 MeshCollider:
   m_ObjectHideFlags: 0
