@@ -6,17 +6,13 @@ public class HarvesterController : MonoBehaviour
 {
     public float harvesterSpeed = 0.1f;
     public float harvesterBackSpeed = 0.05f;
-    float rotationAmount = 0.0f;  // Cantidad de rotación acumulada
-    public float rotationSpeed = 70.0f;
-    Quaternion targetRotation;
 
-    public string cornLayer; 
-    public float radioDetection = 0.5f;
-    
-    
     Transform harvesterTransform;
     Vector3 harvesterPosition;
 
+    Quaternion targetRotation;
+    float rotationAmount = 0.0f;  // Cantidad de rotación acumulada
+    public float rotationSpeed = 70.0f;
 
     void Start()
     {
@@ -71,17 +67,5 @@ public class HarvesterController : MonoBehaviour
         // Mover el vehículo en la dirección opuesta a la adelante
         harvesterPosition -= forwardDirection * harvesterBackSpeed;
         harvesterTransform.position = harvesterPosition;
-    }
-    
-    
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer(cornLayer))
-        {
-            // Destruir el objeto de maíz
-            Destroy(other.gameObject);
-            GlobalData.cornHarvested++;
-            Debug.Log("Maíz recolectado: " + GlobalData.cornHarvested);
-        }
     }
 }

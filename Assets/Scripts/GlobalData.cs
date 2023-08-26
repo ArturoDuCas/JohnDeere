@@ -8,4 +8,6 @@ public static class GlobalData
     
     // Results data
     public static int cornHarvested = 0; 
+
+
 }

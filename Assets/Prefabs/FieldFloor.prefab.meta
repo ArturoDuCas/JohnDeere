@@ -1,6 +1,11 @@
 fileFormatVersion: 2
-guid: 19827b77c7dfecb44bf58bb6847b0af6
+<<<<<<<< HEAD:Assets/Prefabs/FieldFloor.prefab.meta
+guid: bb0b81737091db5408a001a74711eab4
 PrefabImporter:
+========
+guid: 7b293d2335053450f813015834ae337e
+DefaultImporter:
+>>>>>>>> 4c8c19cbfab7ce232720d2cff37dabb8018c5931:Assets/Scenes/MLTests 2.unity.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
