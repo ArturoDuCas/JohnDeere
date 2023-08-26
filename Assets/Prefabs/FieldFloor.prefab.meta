@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream
 <<<<<<<< HEAD:Assets/Prefabs/FieldFloor.prefab.meta
 guid: bb0b81737091db5408a001a74711eab4
+=======
+guid: 69e5d0a66df2b0a4d934787d86d4439c
+>>>>>>> Stashed changes
 PrefabImporter:
 ========
 guid: 7b293d2335053450f813015834ae337e
