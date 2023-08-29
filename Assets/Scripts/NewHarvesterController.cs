@@ -7,14 +7,27 @@ public class NewHarvesterController : MonoBehaviour
 {
     private float movementSpeed = 2.0f;
     public LayerMask cornLayer;
-
+    public float gas = 100; 
 
     void Start()
     {
-        GoToUnit(1, 1);
+        GoToUnit(0,0);
         HarvestUnit(); 
+        InvokeRepeating("DecreaseGas", 0.0f, 5.0f);
     }
 
+    void DecreaseGas()
+    {
+        if (gas > 0)
+        {
+            gas -= 1;
+            Debug.Log("Gas decreased. Current gas: " + gas);
+        }
+        else
+        {
+            Debug.Log("Out of gas!");
+        }
+    }
 
     void GoToUnit(int row, int col)
     {
@@ -80,6 +93,7 @@ public class NewHarvesterController : MonoBehaviour
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
         float distance = Vector3.Distance(transform.position, finishPosition);
+
         while (distance >= 0f)
         {
             transform.position = Vector3.MoveTowards(transform.position, finishPosition, movementSpeed * Time.deltaTime);
