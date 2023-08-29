@@ -7,7 +7,7 @@ public class HarvesterController : MonoBehaviour
     public float harvesterSpeed = 0.1f;
     public float harvesterBackSpeed = 0.05f;
 
-    Transform harvesterTransform;
+    public Transform harvesterTransform;
     Vector3 harvesterPosition;
 
     Quaternion targetRotation;
