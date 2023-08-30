@@ -64,4 +64,18 @@ public class WS_Client : MonoBehaviour
             }
         }
     }
+
+    public void SendGasCapacity(float gas)
+    {
+        
+        var message = new Message
+        {
+            type = "gas_capacity", 
+            data = gas.ToString()
+        }; 
+
+        var jsonMessage = JsonUtility.ToJson(message); 
+
+        ws.Send(jsonMessage);
+    }
 }

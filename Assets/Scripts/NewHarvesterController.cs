@@ -9,19 +9,25 @@ public class NewHarvesterController : MonoBehaviour
     public LayerMask cornLayer;
     public float gas = 100; 
 
+    private WS_Client wsClient; 
+    
+
     void Start()
     {
         GoToUnit(0,0);
         HarvestUnit(); 
         InvokeRepeating("DecreaseGas", 0.0f, 5.0f);
+        wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
+
     }
 
     void DecreaseGas()
     {
         if (gas > 0)
         {
-            gas -= 1;
-            Debug.Log("Gas decreased. Current gas: " + gas);
+           gas -= 1;
+            Debug.Log("Gas decreased. Current gas: " + gas );
+            wsClient.SendGasCapacity(gas);
         }
         else
         {
