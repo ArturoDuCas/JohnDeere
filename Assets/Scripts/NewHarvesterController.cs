@@ -13,8 +13,9 @@ public class NewHarvesterController : MonoBehaviour
     public float fuelConsumption = 20;
     
 
-
-    public Vector2 currentUnit; 
+    
+    public int currentRow; 
+    public int currentCol;
     
 
     private WS_Client wsClient; 
@@ -22,36 +23,26 @@ public class NewHarvesterController : MonoBehaviour
 
     void Start()
     {
-<<<<<<< Updated upstream
+        currentRow = 0;
+        currentCol = -1;
         GoToUnit(0,0);
-        HarvestUnit(); 
-        InvokeRepeating("DecreaseGas", 0.0f, 5.0f);
-        wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
-
-=======
-        // currentUnit = new Vector2(0,0);
-        // GoToUnit(0,0);
         // HarvestUnit();
->>>>>>> Stashed changes
     }
 
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-<<<<<<< Updated upstream
-           gas -= 1;
-            Debug.Log("Gas decreased. Current gas: " + gas );
-            wsClient.SendGasCapacity(gas);
-        }
-        else
+            GoUp();
+        } else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Debug.Log("Out of gas!");
-=======
-            GoUp(); 
->>>>>>> Stashed changes
+            HarvestRight(); 
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            HarvestLeft();
         }
+        
     }
     
     
@@ -94,10 +85,75 @@ public class NewHarvesterController : MonoBehaviour
 
     void GoUp()
     {
-        transform.rotation = Quaternion.Euler(0, -90, 0);
-        transform.position += new Vector3(0, 0, 6);
+        // Rotate the harvester before moving
+        float previousYRotation = transform.eulerAngles.y;
+        transform.rotation = Quaternion.Euler(0, 270, 0);
+        if (previousYRotation == 0f) 
+        {
+            transform.position += new Vector3(0, 0, 6);
+        } else if (previousYRotation == 180f)
+        {
+            transform.position += new Vector3(6, 0, 4);
+        }
+        
+        // Get the position of the unit
+        currentRow += 1;
+        int finishZPosition = currentRow * GlobalData.unit_zSize + GlobalData.unit_zSize;
+        
+        StartCoroutine(GoUpCoroutine(finishZPosition));
     }
 
+    IEnumerator GoUpCoroutine(int finishZPosition)
+    {
+        Vector3 finishPosition = new Vector3(transform.position.x, transform.position.y, finishZPosition);
+        float distance = Vector3.Distance(transform.position, finishPosition);
+        
+        while (distance >= 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, finishPosition, movementSpeed * Time.deltaTime);
+            distance = Vector3.Distance(transform.position, finishPosition);
+            yield return null;
+        }
+        
+        fuel -= fuelConsumption / 3;
+    }
+
+    void HarvestRight()
+    {
+        // Rotate the harvester before moving
+        float previousYRotation = transform.eulerAngles.y;
+        if (previousYRotation == 270f) // if was looking up
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); 
+            transform.position += new Vector3(0, 0, -6);
+        }
+        
+        // Get the finish position
+        Vector3 finishPosition = transform.position;
+        
+        finishPosition += new Vector3(GlobalData.unit_xSize, 0, 0);
+        currentCol += 1;
+        
+        StartCoroutine(HarvestCoroutine(finishPosition));
+    }
+
+    void HarvestLeft()
+    {
+        // Rotate the harvester before moving
+        float previousYRotation = transform.eulerAngles.y;
+        if(previousYRotation == 270f) // if was looking up
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0); 
+            transform.position += new Vector3(-6, 0, -1);
+        }
+        
+        // Get the finish position
+        Vector3 finishPosition = transform.position;
+        finishPosition += new Vector3(-GlobalData.unit_xSize, 0, 0);
+        currentCol -= 1;
+
+        StartCoroutine(HarvestCoroutine(finishPosition)); 
+    }
     
     // precondition: harvester must be on the right or left side of the unit
     void HarvestUnit()
@@ -106,10 +162,12 @@ public class NewHarvesterController : MonoBehaviour
         if(transform.rotation.y == 0) // Looking to the right
         {
             finishPosition += new Vector3(GlobalData.unit_xSize, 0, 0);
+            currentCol += 1;
         }
         else // Looking to the left
         {
             finishPosition += new Vector3(-GlobalData.unit_xSize, 0, 0);
+            currentCol -= 1;
         }
         
         StartCoroutine(HarvestCoroutine(finishPosition));
@@ -117,7 +175,7 @@ public class NewHarvesterController : MonoBehaviour
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
-        GlobalData.fieldMatrix[(int)currentUnit.x, (int)currentUnit.y] = 2;
+        // GlobalData.fieldMatrix[currentRow, currentCol] = 2;
         
         float distance = Vector3.Distance(transform.position, finishPosition);
 
@@ -129,7 +187,21 @@ public class NewHarvesterController : MonoBehaviour
         }
         
         fuel -= fuelConsumption;
-        GlobalData.fieldMatrix[(int)currentUnit.x, (int)currentUnit.y] = 0; // TODO: No cambia a 0 
+        // GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
     }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

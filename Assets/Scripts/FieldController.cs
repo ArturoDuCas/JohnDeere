@@ -4,7 +4,7 @@ using UnityEngine;
 public class FieldController : MonoBehaviour
 {
     public GameObject unitPrefab;  // Corn section prefab
-    public int numCols; // x axis, 20m
+    public int numCols; // x axis, 6m
     public int numRows; // z axis, 6m
 
     void Awake()

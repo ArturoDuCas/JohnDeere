@@ -12,7 +12,7 @@ public static class GlobalData
     
     
     // Unit data
-    public static int unit_xSize = 20;
+    public static int unit_xSize = 6;
     public static int unit_zSize = 6;
 
 
