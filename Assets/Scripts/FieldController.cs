@@ -45,7 +45,7 @@ public class FieldController : MonoBehaviour
                 GameObject newUnit = Instantiate(unitPrefab, transform);
                 
                 // Set the position of the new corn section
-                newUnit.transform.position = new Vector3(col * 20, 0, row * 6);
+                newUnit.transform.position = new Vector3(col * GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize);
                 newUnit.name = $"Unit({row}, {col})";
             }
         }
@@ -53,7 +53,7 @@ public class FieldController : MonoBehaviour
 
     void UpdateParentPosition()
     {
-        transform.position += new Vector3(5f, 0, 3f);
+        transform.position += new Vector3(GlobalData.unit_xSize / 2, 0, GlobalData.unit_zSize / 2); 
     }
 
     

@@ -41,7 +41,7 @@ public class NewHarvesterController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            GoUp();
+            HarvestUp();
         } else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             HarvestRight(); 
@@ -90,14 +90,14 @@ public class NewHarvesterController : MonoBehaviour
         }
     }
 
-    void GoUp()
+    void HarvestUp()
     {
         // Rotate the harvester before moving
         float previousYRotation = transform.eulerAngles.y;
         transform.rotation = Quaternion.Euler(0, 270, 0);
         if (previousYRotation == 0f) 
         {
-            transform.position += new Vector3(0, 0, 6);
+            transform.position += new Vector3(5, 0, 6);
         } else if (previousYRotation == 180f)
         {
             transform.position += new Vector3(6, 0, 4);
@@ -105,9 +105,12 @@ public class NewHarvesterController : MonoBehaviour
         
         // Get the position of the unit
         currentRow += 1;
-        int finishZPosition = currentRow * GlobalData.unit_zSize + GlobalData.unit_zSize;
+
+        Vector3 finishPosition = transform.position;
         
-        StartCoroutine(GoUpCoroutine(finishZPosition));
+        finishPosition += new Vector3(0, 0, currentRow * GlobalData.unit_zSize + GlobalData.unit_zSize);
+
+        StartCoroutine(HarvestCoroutine(finishPosition));
     }
 
     IEnumerator GoUpCoroutine(int finishZPosition)
@@ -182,7 +185,7 @@ public class NewHarvesterController : MonoBehaviour
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
-        // GlobalData.fieldMatrix[currentRow, currentCol] = 2;
+        GlobalData.fieldMatrix[currentRow, currentCol] = 2;
         
         float distance = Vector3.Distance(transform.position, finishPosition);
 
@@ -198,7 +201,7 @@ public class NewHarvesterController : MonoBehaviour
         }
         
         fuel -= fuelConsumption;
-        // GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
+        GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
     }
     
 }
