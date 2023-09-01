@@ -258,6 +258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1013496371265905611}
+  - component: {fileID: 5194245460726430848}
   m_Layer: 0
   m_Name: HarvesterContainer
   m_TagString: Untagged
@@ -281,6 +282,25 @@ Transform:
   - {fileID: 7162876067323027879}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5194245460726430848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397999370892582414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d715fa0ea7ab0c488b72b2d2a81a049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cornLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  fuel: 100
+  fuelConsumption: 20
+  currentRow: 0
+  currentCol: 0
 --- !u!1 &2034341902794720860
 GameObject:
   m_ObjectHideFlags: 0
