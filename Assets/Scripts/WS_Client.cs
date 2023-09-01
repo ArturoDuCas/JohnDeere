@@ -78,4 +78,17 @@ public class WS_Client : MonoBehaviour
 
         ws.Send(jsonMessage);
     }
+
+    public void SendSpeed(float speed)
+    {
+        var message = new Message
+        {
+            type = "harvester_speed",
+            data = speed.ToString()
+        };
+
+        var jsonMessage = JsonUtility.ToJson(message); 
+
+        ws.Send(jsonMessage); 
+    }
 }

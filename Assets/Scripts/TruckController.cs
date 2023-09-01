@@ -15,6 +15,8 @@ public class TruckController : MonoBehaviour
     float rotationTruckAmount = 0.0f; 
     public float rotationTruckSpeed = 70.0f; 
 
+    private WS_Client wsClient; 
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,8 @@ public class TruckController : MonoBehaviour
         truckPosition = new Vector3(7, 0, 0); 
         truckTransform.position = truckPosition;
         targetTruckRotation = truckTransform.rotation; 
+
+        wsClient = FindObjectOfType<WS_Client>(); 
         
     }
 

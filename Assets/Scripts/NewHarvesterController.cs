@@ -19,14 +19,21 @@ public class NewHarvesterController : MonoBehaviour
     
 
     private WS_Client wsClient; 
-    
+    private WS_Client wsClient2; 
 
     void Start()
     {
         currentRow = 0;
         currentCol = -1;
         GoToUnit(0,0);
+<<<<<<< Updated upstream
         // HarvestUnit();
+=======
+        HarvestUnit(); 
+        InvokeRepeating("DecreaseGas", 0.0f, 5.0f);
+        wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
+        wsClient2 = FindObjectOfType<WS_Client>(); 
+>>>>>>> Stashed changes
     }
 
 
@@ -182,8 +189,12 @@ public class NewHarvesterController : MonoBehaviour
         while (distance >= 0.01f)
         {
             transform.position = Vector3.MoveTowards(transform.position, finishPosition, movementSpeed * Time.deltaTime);
+            const HarvesterSpeed = movementSpeed * Time.deltaTime; 
             distance = Vector3.Distance(transform.position, finishPosition);
             yield return null;
+
+            wsClient2.SendSpeed(HarvesterSpeed );
+    
         }
         
         fuel -= fuelConsumption;
