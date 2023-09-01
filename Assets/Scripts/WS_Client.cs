@@ -1,6 +1,8 @@
 using WebSocketSharp; 
 using UnityEngine;
 using System.Text.Json;
+using System.Collections.Generic; // Add this using directive
+
 
 
 public class WS_Client : MonoBehaviour
@@ -90,5 +92,32 @@ public class WS_Client : MonoBehaviour
         var jsonMessage = JsonUtility.ToJson(message); 
 
         ws.Send(jsonMessage); 
+    }
+
+    public void SendCampo(int[,] fieldMatrix) {
+        var message = new Message {
+            type = "field_matrix",
+            data = ConvertFieldMatrixToJson(fieldMatrix)
+        };
+
+        var jsonMessage = JsonUtility.ToJson(message);
+
+        ws.Send(jsonMessage);
+    }
+
+    private string ConvertFieldMatrixToJson(int[,] fieldMatrix) {
+        int rows = fieldMatrix.GetLength(0);
+        int cols = fieldMatrix.GetLength(1);
+
+        var jsonArray = new List<List<int>>();
+
+        for (int i = 0; i < rows; i++) {
+            var rowList = new List<int>();
+            for (int j = 0; j < cols; j++) {
+                rowList.Add(fieldMatrix[i, j]);
+            }
+        }
+
+        return JsonUtility.ToJson(jsonArray);
     }
 }

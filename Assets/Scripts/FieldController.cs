@@ -7,6 +7,8 @@ public class FieldController : MonoBehaviour
     public int numCols; // x axis, 6m
     public int numRows; // z axis, 6m
 
+    private WS_Client wsClient; 
+
     void Awake()
     {
         CreateGlobalMatrix(); // Create the matrix of corn sections on GlobalData
@@ -15,6 +17,7 @@ public class FieldController : MonoBehaviour
     {
         CreateField();
         UpdateParentPosition();
+        wsClient = FindObjectOfType<WS_Client>(); 
     }
 
     void CreateGlobalMatrix()
@@ -34,6 +37,8 @@ public class FieldController : MonoBehaviour
         Common.printMatrix(matrix);
         // Set the matrix on GlobalData
         GlobalData.fieldMatrix = matrix;
+
+        wsClient.SendCampo(matrix);
     }
     
     void CreateField()
