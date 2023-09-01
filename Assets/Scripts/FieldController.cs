@@ -17,7 +17,7 @@ public class FieldController : MonoBehaviour
     {
         CreateField();
         UpdateParentPosition();
-        wsClient = FindObjectOfType<WS_Client>(); 
+        // wsClient = FindObjectOfType<WS_Client>(); 
     }
 
     void CreateGlobalMatrix()
@@ -38,7 +38,7 @@ public class FieldController : MonoBehaviour
         // Set the matrix on GlobalData
         GlobalData.fieldMatrix = matrix;
 
-        wsClient.SendCampo(matrix);
+        // wsClient.SendCampo(matrix);
     }
     
     void CreateField()
