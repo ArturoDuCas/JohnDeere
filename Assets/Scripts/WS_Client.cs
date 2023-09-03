@@ -9,6 +9,7 @@ public class WS_Client : MonoBehaviour
 {
     private WebSocket ws;
 
+    [System.Serializable]
     private class FieldMatrixMessage
     {
         public string type;
@@ -99,14 +100,16 @@ public class WS_Client : MonoBehaviour
 
         ws.Send(jsonMessage); 
     }
-    public void SendCampo(int[,] fieldMatrix)
+
+   public void SendCampo(int[,] fieldMatrix)
     {
         var message = new FieldMatrixMessage
         {
             type = "field_matrix",
-            data = fieldMatrix // Assign the int[,] matrix directly
+            data = fieldMatrix
         };
 
+        // Use JsonUtility to convert the FieldMatrixMessage object to JSON
         var jsonMessage = JsonUtility.ToJson(message);
 
         ws.Send(jsonMessage);
