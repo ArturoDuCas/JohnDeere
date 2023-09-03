@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class NewHarvesterController : MonoBehaviour
 {
     public LayerMask cornLayer;
@@ -36,7 +37,7 @@ public class NewHarvesterController : MonoBehaviour
 
 
     private WS_Client wsClient; 
-    private WS_Client wsClient2; 
+    // private WS_Client wsClient2; 
 
     private Vector3 posCorrectionRight = new Vector3(-5.5f, 0f, 2.6f); 
     private Vector3 posCorrectionUp  = new Vector3(-3.2f, 0f, -5.4f);
@@ -57,7 +58,6 @@ public class NewHarvesterController : MonoBehaviour
         harvestParticles = GetComponentInChildren<ParticleSystem>();
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
-        wsClient2 = FindObjectOfType<WS_Client>();
     }
 
 
@@ -251,17 +251,19 @@ public class NewHarvesterController : MonoBehaviour
             distance = Vector3.Distance(transform.position, finishPosition);
             yield return null;
 
-            // wsClient2.SendSpeed(actualSpeed);
+            // wsClient.SendSpeed(actualSpeed);
     
         }
         
         fuel -= fuelConsumption;
+        wsClient.SendGasCapacity(fuel);
         GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
         Common.printMatrix(GlobalData.fieldMatrix);
         isMoving = false; 
         harvestParticles.Stop();
         
         
+        wsClient.SendCampo(GlobalData.fieldMatrix);
     }
     
 }

@@ -9,6 +9,12 @@ public class WS_Client : MonoBehaviour
 {
     private WebSocket ws;
 
+    private class FieldMatrixMessage
+    {
+        public string type;
+        public int[,] data;
+    }
+
     void Start()
     {
         ws = new WebSocket("ws://localhost:8080");
@@ -93,11 +99,12 @@ public class WS_Client : MonoBehaviour
 
         ws.Send(jsonMessage); 
     }
-
-    public void SendCampo(int[,] fieldMatrix) {
-        var message = new Message {
+    public void SendCampo(int[,] fieldMatrix)
+    {
+        var message = new FieldMatrixMessage
+        {
             type = "field_matrix",
-            data = ConvertFieldMatrixToJson(fieldMatrix)
+            data = fieldMatrix // Assign the int[,] matrix directly
         };
 
         var jsonMessage = JsonUtility.ToJson(message);
@@ -105,19 +112,31 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage);
     }
 
-    private string ConvertFieldMatrixToJson(int[,] fieldMatrix) {
+    private string ConvertFieldMatrixToJson(int[,] fieldMatrix)
+    {
         int rows = fieldMatrix.GetLength(0);
         int cols = fieldMatrix.GetLength(1);
 
-        var jsonArray = new List<List<int>>();
-
-        for (int i = 0; i < rows; i++) {
-            var rowList = new List<int>();
-            for (int j = 0; j < cols; j++) {
+        // Create a list of lists to represent the matrix
+        List<List<int>> matrixList = new List<List<int>>();
+        
+        for (int i = 0; i < rows; i++)
+        {
+            List<int> rowList = new List<int>();
+            for (int j = 0; j < cols; j++)
+            {
                 rowList.Add(fieldMatrix[i, j]);
             }
+            matrixList.Add(rowList);
         }
 
-        return JsonUtility.ToJson(jsonArray);
+        // Serialize the matrix list to JSON using JsonUtility
+        string json = JsonUtility.ToJson(matrixList);
+
+        return json;
     }
+
 }
+
+
+
