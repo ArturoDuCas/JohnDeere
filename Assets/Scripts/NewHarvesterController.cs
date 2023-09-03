@@ -10,13 +10,29 @@ public class NewHarvesterController : MonoBehaviour
     private float movementSpeed = 2.0f;
     private float actualSpeed; 
 
-    public float fuel = 100; 
-    public float fuelConsumption = 20;
+    private float fuel = 1000; 
+    private float fuelConsumption = 20;
     
 
     
     public int currentRow; 
     public int currentCol;
+    
+    public Vector2[] path =
+        
+    {
+        new Vector2(0,0),
+        new Vector2(0,1), 
+        new Vector2(0,2),
+        new Vector2(0,3),
+        new Vector2(1, 3),
+        new Vector2(1,2), 
+        new Vector2(1,1),
+        new Vector2(1,0),
+    };
+
+    public bool isMoving = false; 
+    public bool finishedPath = false;
 
 
     private WS_Client wsClient; 
@@ -26,6 +42,9 @@ public class NewHarvesterController : MonoBehaviour
     private Vector3 posCorrectionUp  = new Vector3(-3.2f, 0f, -5.4f);
     private Vector3 posCorrectionLeft = new Vector3(5.2f, 0f, 2.8f);
     private Vector3 posCorrectionDown = new Vector3(-3.2f, 0f, 5.1f); 
+    
+    public ParticleSystem harvestParticlesPrefab;
+    private ParticleSystem harvestParticles;
 
 
     void Start()
@@ -34,6 +53,9 @@ public class NewHarvesterController : MonoBehaviour
         currentCol = -1;
         GoToUnit(0,0);
 
+        Instantiate(harvestParticlesPrefab, transform); 
+        harvestParticles = GetComponentInChildren<ParticleSystem>();
+
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
         wsClient2 = FindObjectOfType<WS_Client>();
     }
@@ -41,22 +63,52 @@ public class NewHarvesterController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if(fuel <= 0) // If the harvester has no fuel
         {
-            HarvestUp();
-        } else if (Input.GetKeyDown(KeyCode.RightArrow))
+            return; 
+        }
+        
+        
+        if (!finishedPath) // If the path is not finished
         {
-            HarvestRight(); 
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            HarvestLeft();
-        } else if(Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            HarvestDown();
+            if (!isMoving) // If the harvester is not moving
+            {
+                GetMovement(); 
+            }
         }
         
     }
-    
+
+    void GetMovement()
+    { 
+        if(path.Length == 0)
+        {
+            finishedPath = true;
+            return; 
+        }
+        
+        isMoving = true;
+        if(GlobalData.fieldMatrix[(int) path[0].x, (int) path[0].y] == 1) // if the unit has corn
+        {
+            harvestParticles.Play();
+        }
+        
+        if (currentCol < path[0].y) // Se mueve a la derecha
+        {
+            HarvestRight(); 
+        } else if (currentCol > path[0].y) // Se mueve a la izquierda
+        {
+            HarvestLeft(); 
+        } else if (currentRow < path[0].x) // Se mueve hacia arriba
+        {
+            HarvestUp(); 
+        } else if (currentRow > path[0].x) // Se mueve hacia abajo
+        {
+            HarvestDown(); 
+        }
+        
+        path = path[1..]; // Remove the first element of the array
+    }
     
     
 
@@ -206,6 +258,10 @@ public class NewHarvesterController : MonoBehaviour
         fuel -= fuelConsumption;
         GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
         Common.printMatrix(GlobalData.fieldMatrix);
+        isMoving = false; 
+        harvestParticles.Stop();
+        
+        
     }
     
 }

@@ -16,4 +16,15 @@ public static class Common
         }
         Debug.Log(matrixString);
     }
+    
+    public static void printArray(Vector2[] array)
+    {
+        string arrayString = "";
+        for (int i = 0; i < array.Length; i++)
+        {
+            arrayString += array[i] + ", ";
+        }
+        Debug.Log(arrayString);
+    }
+    
 }
