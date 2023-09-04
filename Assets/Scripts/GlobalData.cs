@@ -15,6 +15,7 @@ public static class GlobalData
     
     // Connection data
     public static string selfID = "";    
+
     
     // Harvesters data 
     public static Harvester[] harvesters;
