@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
-public class NewHarvesterController : MonoBehaviour
+public class Harvester : MonoBehaviour
 {
     public LayerMask cornLayer;
     
@@ -35,6 +34,10 @@ public class NewHarvesterController : MonoBehaviour
     public bool isMoving = false; 
     public bool finishedPath = false;
 
+    private int grainCapacity = 15; 
+    private int grainLoad = 0;
+    
+
 
     private WS_Client wsClient; 
     // private WS_Client wsClient2; 
@@ -63,8 +66,7 @@ public class NewHarvesterController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(GlobalData.selfID); 
-        if(fuel <= 0) // If the harvester has no fuel
+        if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
         {
             return; 
         }
@@ -257,13 +259,16 @@ public class NewHarvesterController : MonoBehaviour
         }
         
         fuel -= fuelConsumption;
-        wsClient.SendGasCapacity(fuel);
-        GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
-        Common.printMatrix(GlobalData.fieldMatrix);
+        grainLoad += GlobalData.grainsPerUnit;
         isMoving = false; 
         harvestParticles.Stop();
         
         
+        
+        GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
+        Common.printMatrix(GlobalData.fieldMatrix);
+        
+        wsClient.SendGasCapacity(fuel);
         wsClient.SendCampo(GlobalData.fieldMatrix);
     }
     
