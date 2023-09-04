@@ -101,43 +101,19 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage); 
     }
 
-   public void SendCampo(int[,] fieldMatrix)
+   public void SendCampo(string fieldMatrix)
     {
-        var message = new FieldMatrixMessage
+        var message = new Message
         {
             type = "field_matrix",
             data = fieldMatrix
         };
 
-        // Use JsonUtility to convert the FieldMatrixMessage object to JSON
-        var jsonMessage = JsonUtility.ToJson(message);
+        var jsonMessage = JsonUtility.ToJson(message); 
 
-        ws.Send(jsonMessage);
+        ws.Send(jsonMessage); 
     }
 
-    private string ConvertFieldMatrixToJson(int[,] fieldMatrix)
-    {
-        int rows = fieldMatrix.GetLength(0);
-        int cols = fieldMatrix.GetLength(1);
-
-        // Create a list of lists to represent the matrix
-        List<List<int>> matrixList = new List<List<int>>();
-        
-        for (int i = 0; i < rows; i++)
-        {
-            List<int> rowList = new List<int>();
-            for (int j = 0; j < cols; j++)
-            {
-                rowList.Add(fieldMatrix[i, j]);
-            }
-            matrixList.Add(rowList);
-        }
-
-        // Serialize the matrix list to JSON using JsonUtility
-        string json = JsonUtility.ToJson(matrixList);
-
-        return json;
-    }
 
 }
 
