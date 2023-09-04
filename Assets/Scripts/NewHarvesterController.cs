@@ -63,6 +63,7 @@ public class NewHarvesterController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(GlobalData.selfID); 
         if(fuel <= 0) // If the harvester has no fuel
         {
             return; 
