@@ -26,7 +26,6 @@ public class WS_Client : MonoBehaviour
             if (message.type == "connection_info")
             {
                 Debug.Log("ID: " + message.data);
-                GlobalData.selfID = message.data;
             } else if (message.type == "connect")
             {
                 Debug.Log("Established connection with: " + message.sender);
