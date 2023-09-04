@@ -18,6 +18,8 @@ public class FieldController : MonoBehaviour
         CreateField();
         UpdateParentPosition();
         // wsClient = FindObjectOfType<WS_Client>(); 
+
+        GlobalData.harvesters = FindObjectsOfType<Harvester>(); 
     }
 
     void CreateGlobalMatrix()
