@@ -4,8 +4,6 @@ using UnityEngine;
 public class FieldController : MonoBehaviour
 {
     public GameObject unitPrefab;  // Corn section prefab
-    public int numCols; // x axis, 6m
-    public int numRows; // z axis, 6m
 
     private WS_Client wsClient; 
 
@@ -25,12 +23,12 @@ public class FieldController : MonoBehaviour
     void CreateGlobalMatrix()
     {
         // Create the matrix
-        int[,] matrix = new int[numRows, numCols];
+        int[,] matrix = new int[GlobalData.fieldRows, GlobalData.fieldCols];
 
         // Fill the matrix with 1s (not harvested)
-        for(int i = 0; i < numRows; i++)
+        for(int i = 0; i < GlobalData.fieldRows; i++)
         {
-            for(int j = 0; j < numCols; j++)
+            for(int j = 0; j < GlobalData.fieldCols; j++)
             {
                 matrix[i, j] = 1;
             }
@@ -45,9 +43,9 @@ public class FieldController : MonoBehaviour
     
     void CreateField()
     {
-        for (int row = 0; row < numRows; row++) // Start generating from top to bottom
+        for (int row = 0; row < GlobalData.fieldRows; row++) // Start generating from top to bottom
         {
-            for (int col = 0; col < numCols; col++) // Generate from left to right
+            for (int col = 0; col < GlobalData.fieldCols; col++) // Generate from left to right
             {
                 GameObject newUnit = Instantiate(unitPrefab, transform);
                 
