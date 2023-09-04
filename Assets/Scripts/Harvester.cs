@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Newtonsoft.Json;
 
 
 public class Harvester : MonoBehaviour
@@ -239,7 +240,20 @@ public class Harvester : MonoBehaviour
 
     }
     
-    
+    // Function to convert a 2D integer array to a JSON string
+    public static string ConvertMatrixToJson(int[,] matrix)
+    {
+        // Create a class to hold your matrix
+        var matrixData = new
+        {
+            Data = matrix
+        };
+
+        // Convert the matrix data to a JSON string
+        string json = JsonConvert.SerializeObject(matrixData);
+
+        return json;
+    }
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
@@ -269,7 +283,9 @@ public class Harvester : MonoBehaviour
         Common.printMatrix(GlobalData.fieldMatrix);
         
         wsClient.SendGasCapacity(fuel);
-        wsClient.SendCampo(GlobalData.fieldMatrix);
+        
+        string json = ConvertMatrixToJson(GlobalData.fieldMatrix);        
+        wsClient.SendCampo(json);
     }
     
 }

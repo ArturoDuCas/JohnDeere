@@ -14,9 +14,7 @@ public static class GlobalData
     public static int grainsPerUnit = 5; 
     
     // Connection data
-    public static string selfID = "";
-    public static int grainsPerUnit = 5; 
-    
+    public static string selfID = "";    
     
     // Harvesters data 
     public static Harvester[] harvesters;
