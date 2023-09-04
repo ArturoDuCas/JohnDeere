@@ -13,6 +13,28 @@ public class Truck : MonoBehaviour
     private float fuel = 1200; 
     float fuelConsumption = 20;
     
+    public Vector2[] path =
+        
+    {
+        new Vector2(0,0),
+        new Vector2(0,1), 
+        new Vector2(0,2),
+        new Vector2(0,3),
+        new Vector2(1, 3),
+        new Vector2(1,2), 
+        new Vector2(1,1),
+        new Vector2(1,0),
+    };
+
+
+    public bool startPath = false; 
+    public bool finishedPath = false;
+    public bool isMoving = false; 
+        
+        
+    private int grainCapacity = 15; 
+    private int grainLoad = 0;
+    
     void Start()
     {
         currentRow = 0;
@@ -22,19 +44,52 @@ public class Truck : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            MoveRight();
-        } else if(Input.GetKeyDown(KeyCode.UpArrow))
+            startPath = true;  
+        }
+
+        if(fuel <= 0) // if fuel is over or grain load is full, stop moving
         {
-            MoveUp();
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            isMoving = false;
+            return;
+        }
+
+        if (!finishedPath && startPath) // if the path is not finished
+        {
+            if (!isMoving) // if the truck is not moving
+            {
+                GetMovement(); 
+            }
+        }
+        
+    }
+
+    void GetMovement()
+    {
+        if(path.Length == 0)
+        {
+            finishedPath = true;
+            return; 
+        }
+        
+        isMoving = true;
+        
+        if (currentCol < path[0].y) // Se mueve a la derecha
+        {
+            MoveRight(); 
+        } else if (currentCol > path[0].y) // Se mueve a la izquierda
         {
             MoveLeft(); 
-        } else if (Input.GetKeyDown(KeyCode.DownArrow))
+        } else if (currentRow < path[0].x) // Se mueve hacia arriba
+        {
+            MoveUp(); 
+        } else if (currentRow > path[0].x) // Se mueve hacia abajo
         {
             MoveDown(); 
         }
+        
+        path = path[1..]; // Remove the first element of the array
     }
 
     void PutOnPosition(int row, int col)
@@ -60,7 +115,10 @@ public class Truck : MonoBehaviour
         } else if(previousYRotation == 90) // if was looking left
         {
             transform.position += new Vector3(0f, 0f, 0f);
-        } 
+        } else if (previousYRotation == 0) // if was looking down 
+        {
+            transform.position += new Vector3(-0.8f, 0f, -1.4f); 
+        }
         transform.rotation = Quaternion.Euler(0, 270, 0); 
         
         // Get the finish Position
@@ -74,10 +132,17 @@ public class Truck : MonoBehaviour
     {
         // Rotate the truck before moving
         float previousYRotation = transform.eulerAngles.y;
-        if(previousYRotation == -90 || previousYRotation == 270f) // if was looking left
+        if(previousYRotation == -90 || previousYRotation == 270f) // if was looking right
         {
             transform.position += new Vector3(0.8f, 0f, 0.2f); 
+        } else if (previousYRotation == 90f) // if was looking left
+        {
+            transform.position += new Vector3(-1.1f, 0f, 0f); 
+        } else if (previousYRotation == 0) // if was looking down
+        {
+            transform.position += new Vector3(0f, 0f, 0f); 
         }
+
         transform.rotation = Quaternion.Euler(0, 180, 0); 
         
         // Get the finish position 
@@ -98,7 +163,11 @@ public class Truck : MonoBehaviour
         } else if(previousYRotation == 180) // if was looking up
         {
             transform.position += new Vector3(0f, 0f, 0f); 
+        } else if (previousYRotation == 0) // if was looking down
+        {
+            transform.position += new Vector3(1.8f, 0f, -1.8f);
         }
+
         transform.rotation = Quaternion.Euler(0, 90, 0);
         
         // Get the finish position
@@ -115,6 +184,12 @@ public class Truck : MonoBehaviour
         if (previousYRotation == 180) // if was looking up
         {
             transform.position += new Vector3(0f, 0f, 0f); 
+        } else if (previousYRotation == 270 || previousYRotation == -90) // if was looking right
+        {
+            transform.position += new Vector3(1.2f, 0f, 1f); 
+        } else if (previousYRotation == previousYRotation) // if was looking left
+        {
+            transform.position += new Vector3(-1f, 0f, 1f); 
         }
         
         transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -141,5 +216,6 @@ public class Truck : MonoBehaviour
         }
 
         fuel -= fuelConsumption; 
+        isMoving = false;
     }
 }
