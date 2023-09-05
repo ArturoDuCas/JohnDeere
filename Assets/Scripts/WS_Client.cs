@@ -115,13 +115,16 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage); 
     }
 
-    public void SendStartingPoints(int[,] startingPoints)
+    public void SendInitialHarvesterData(int[,] startingPoints)
     {
         var message = new MSg_SendStartingPoints
         {
             type = "starting_points",
-            data = startingPoints
-            
+            data = new PositionsAndFieldMatrixObject
+            {
+                startingPoints = startingPoints,
+                fieldMatrix = GlobalData.fieldMatrix
+            }
         }; 
 
         var jsonMessage = JsonUtility.ToJson(message);
