@@ -20,5 +20,7 @@ public static class GlobalData
     // Harvesters data 
     public static Harvester[] harvesters;
 
+    public static int numHarvesters = 2;
+
 
 }
