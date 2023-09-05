@@ -75,8 +75,9 @@ public class FieldController : MonoBehaviour
         
         // Set the array of harvesters on GlobalData
         GlobalData.harvesters = harvesters;
-
-        WS_Client.SendStartingPoints(startingPoints); 
+        
+        
+        wsClient.SendStartingPoints(startingPoints); 
     }
 
     void CreateGlobalMatrix()
