@@ -41,5 +41,24 @@ public static class Common
         }
         Debug.Log(arrayString);
     }
+
+
+    public static int[] FixTruckPositions(int row, int col)
+    {
+        if (col == -1) // if starting on left side
+        {
+            col += 1; 
+        } else if (row == -1) // if starting on the bottom
+        {
+            row += 1; 
+        } else if (col == GlobalData.fieldRows) // if starting on the right side
+        {
+            col -= 1; 
+        } else if (row == GlobalData.fieldCols) // if starting on the top
+        {
+            row -= 1; 
+        } 
+        return new int[] {row, col};
+    }
     
 }

@@ -1,6 +1,7 @@
 using WebSocketSharp; 
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Text; 
 using System.Text.Json;
 using System.Collections.Generic; // Add this using directive
 
@@ -9,6 +10,7 @@ using System.Collections.Generic; // Add this using directive
 public class WS_Client : MonoBehaviour
 {
     public WebSocket ws;
+    FieldController fieldController;
 
     [System.Serializable]
     private class FieldMatrixMessage
@@ -20,6 +22,7 @@ public class WS_Client : MonoBehaviour
     void Awake()
     {
         ws = new WebSocket("ws://localhost:8080");
+        fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
     {
@@ -40,7 +43,11 @@ public class WS_Client : MonoBehaviour
                 getFieldDimensions(message.data);
                 Debug.Log(GlobalData.fieldCols.ToString() + GlobalData.fieldRows.ToString());
 
-            } else
+            } else if (message.type == "starting_harvester_data")
+            {
+                // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
+            }
+            else
             {
                 Debug.Log("Mensaje recibido: " + message.data); 
             }
@@ -62,20 +69,40 @@ public class WS_Client : MonoBehaviour
         }
     }
     
-    public static string ConvertMatrixToJson(int[,] matrix)
+    string MatrixToJson(int[,] matrix)
     {
-        // Create a class to hold your matrix
-        var matrixData = new
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+        StringBuilder jsonBuilder = new StringBuilder("[");
+
+        for (int i = 0; i < rows; i++)
         {
-            Data = matrix
-        };
+            jsonBuilder.Append("[");
 
-        // Convert the matrix data to a JSON string
-        string json = JsonConvert.SerializeObject(matrixData);
+            for (int j = 0; j < cols; j++)
+            {
+                jsonBuilder.Append(matrix[i, j]);
 
-        return json;
+                if (j < cols - 1)
+                {
+                    jsonBuilder.Append(",");
+                }
+            }
+
+            jsonBuilder.Append("]");
+
+            if (i < rows - 1)
+            {
+                jsonBuilder.Append(",");
+            }
+        }
+
+        jsonBuilder.Append("]");
+
+        return jsonBuilder.ToString();
     }
-
+    
+    
     void getFieldDimensions(string data)
     {
         string[] parts = data.Split(',');
@@ -136,9 +163,9 @@ public class WS_Client : MonoBehaviour
 
     public void SendInitialHarvesterData()
     {
-        string startingPointsJson = ConvertMatrixToJson(GlobalData.harvestersStartingPoints);    
-        string fieldMatrixJson = ConvertMatrixToJson(GlobalData.fieldMatrix);
-        var message = new Msg_SendStartingPoints
+        string startingPointsJson = MatrixToJson(GlobalData.harvestersStartingPoints);    
+        string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
+        var message = new Msg_SendInitialHarvesterData
         {
             type = "starting_harvester_data",
             startingPoints = startingPointsJson,
@@ -147,6 +174,38 @@ public class WS_Client : MonoBehaviour
         
         var jsonMessage = JsonUtility.ToJson(message);
         
+        ws.Send(jsonMessage); 
+    }
+
+    public void SendHarvesterUnloadRequest(int finalRow, int finalCol)
+    {
+        string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
+        string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
+        
+        // Create the trucks initial positions matrix
+        int[,] truckInitialPosMatrix = new int[GlobalData.numTrucks, 2];
+        int[] initialPos; 
+        for (int i = 0; i < GlobalData.numTrucks; i++)
+        {
+            initialPos = Common.FixTruckPositions(GlobalData.trucks[i].currentRow, GlobalData.trucks[i].currentCol);
+            truckInitialPosMatrix[i, 0] = initialPos[0];
+            truckInitialPosMatrix[i, 1] = initialPos[1];
+        }
+        
+        string truckInitialPos = MatrixToJson(truckInitialPosMatrix); 
+        
+        var message = new Msg_HarvesterUnloadRequest
+        {
+            type = "harvester_unload_request",
+            fieldMatrix = fieldMatrixJson,
+            finalPos = finalPosition,
+            trucksInitialPos = truckInitialPos
+        };
+
+        
+        var jsonMessage = JsonUtility.ToJson(message);
+        
+        Debug.Log(jsonMessage); 
         ws.Send(jsonMessage); 
     }
 

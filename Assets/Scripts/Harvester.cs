@@ -18,30 +18,29 @@ public class Harvester : MonoBehaviour
     
     public int currentRow; 
     public int currentCol;
-    
-    public Vector2[] path =
+
+    public Vector2[] path = { };
         
-    {
-        new Vector2(0,0),
-        new Vector2(0,1), 
-        new Vector2(0,2),
-        new Vector2(0,3),
-        new Vector2(1, 3),
-        new Vector2(1,2), 
-        new Vector2(1,1),
-        new Vector2(1,0),
-    };
+    // {
+    //     new Vector2(0,0),
+    //     new Vector2(0,1), 
+    //     new Vector2(0,2),
+    //     new Vector2(0,3),
+    //     new Vector2(1, 3),
+    //     new Vector2(1,2), 
+    //     new Vector2(1,1),
+    //     new Vector2(1,0),
+    // };
 
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 100; 
+    private int grainCapacity = 15; 
     private int grainLoad = 0;
     
 
 
     private WS_Client wsClient; 
-    // private WS_Client wsClient2; 
 
     private Vector3 posCorrectionRight = new Vector3(-5.5f, 0f, 2.6f); 
     private Vector3 posCorrectionUp  = new Vector3(-3.2f, 0f, -5.4f);
@@ -63,6 +62,10 @@ public class Harvester : MonoBehaviour
 
     void Update()
     {
+        if (path.Length == 0)
+        {
+            return;
+        }
         if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
         {
             return; 
@@ -118,10 +121,18 @@ public class Harvester : MonoBehaviour
         {
             transform.position = new Vector3(0f, 0, row * GlobalData.unit_zSize) + new Vector3(-5.5f, 0, 2.7f); // -3.6 + 5.5
             transform.rotation = Quaternion.Euler(0, 90, 0);
-        } else // starting on the right side
+        } else if(col == GlobalData.fieldCols) // starting on the right side
         {
             transform.position = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize) + new Vector3(-0.5f, 0, 2.7f); 
             transform.rotation = Quaternion.Euler(0, 270, 0);
+        } else if (row == -1) // starting on the bottom
+        {
+            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, 0) + new Vector3(2.8f, 0, -5f);
+            transform.rotation = Quaternion.Euler(0, 0, 0); 
+        } else if(row == GlobalData.fieldRows) // starting on the top
+        {
+            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize + GlobalData.unit_zSize) + new Vector3(2.8f, 0, -1f);
+            transform.rotation = Quaternion.Euler(0, 180, 0); 
         }
     }
 
@@ -230,11 +241,7 @@ public class Harvester : MonoBehaviour
 
         return json;
     }
-
-    void CallTruck()
-    {
-        // TODO: Llamar al Qlearning para que obtenga las rutas 
-    }
+    
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
@@ -255,10 +262,7 @@ public class Harvester : MonoBehaviour
         
         fuel -= fuelConsumption;
         grainLoad += GlobalData.grainsPerUnit;
-        if (grainLoad >= grainCapacity) // if the harvester is full, call the truck
-        {
-            CallTruck(); 
-        }
+        
         
         isMoving = false; 
         harvestParticles.Stop();
@@ -268,6 +272,11 @@ public class Harvester : MonoBehaviour
         GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
         // Common.printMatrix(GlobalData.fieldMatrix);
         
+        
+        if (grainLoad >= grainCapacity) // if the harvester is full, call the truck
+        {
+            wsClient.SendHarvesterUnloadRequest(currentRow, currentCol);
+        }
         wsClient.SendGasCapacity(fuel);
         
             

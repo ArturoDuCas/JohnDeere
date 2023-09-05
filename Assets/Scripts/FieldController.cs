@@ -5,6 +5,7 @@ public class FieldController : MonoBehaviour
 {
     public GameObject unitPrefab;  // Corn section prefab
     public GameObject harvesterPrefab; // Harvester prefab
+    public GameObject truckPrefab; // Truck prefab
 
     private WS_Client wsClient; 
 
@@ -14,14 +15,121 @@ public class FieldController : MonoBehaviour
     }
     void Start()
     {
+        wsClient = FindObjectOfType<WS_Client>(); 
+        
         CreateField();
         UpdateParentPosition();
-        wsClient = FindObjectOfType<WS_Client>(); 
+        InstantiateHarvesters();
+        InstantiateTrucks();
+    }
 
-        InstantiateHarvesters(); 
+    void InstantiateTrucks()
+    {
+        Truck[] trucks = new Truck[GlobalData.numTrucks];
+        int[,] startingPoints = new int[GlobalData.numTrucks, 2];
+
+        for (int i = 0; i < GlobalData.numTrucks; i++)
+        {
+            // Get the initial col and row of the truck
+            System.Random random = new System.Random();
+            int row = random.Next(0, GlobalData.fieldRows);
+            int[] possibleCols = new int[] { 0, GlobalData.fieldCols - 1 };
+            int col = possibleCols[random.Next(0, possibleCols.Length)];
+            if (col == 0)
+                col += -1;
+            else
+                col += 1;
+
+            // Verify that the position is not occupied
+            // TODO: NO VERIFICA QUE LA NUEVA POSICION ESTE DESOCUPADA
+            for (int j = 0; j < trucks.Length; j++)
+            {
+                if (trucks[j] == null)
+                    break;
+
+                if (trucks[j].currentRow == row && trucks[j].currentCol == col)
+                {
+                    row = random.Next(0, GlobalData.fieldRows);
+                    col = possibleCols[random.Next(0, possibleCols.Length)];
+                    if (col == 0)
+                        col += -1;
+                    else
+                        col += 1;
+                }
+            }
+
+            // Instantiate the truck
+            GameObject truck = Instantiate(truckPrefab);
+            Truck truckScript = truck.GetComponent<Truck>();
+            truckScript.currentRow = row;
+            truckScript.currentCol = col;
+            truckScript.PutOnPosition(row, col);
+            trucks[i] = truckScript;
+        }
+        
+        // Set the truck array on GlobalData
+        GlobalData.trucks = trucks;
+    }
+
+    int[] GetLeftRightPos(int[,] startingPoints)
+    {
+        // Get an initial col and row
+        System.Random random = new System.Random();
+        int row = random.Next(0, GlobalData.fieldRows);
+        int[] possibleCols =  new int[] {-1, GlobalData.fieldCols};
+        int col = possibleCols[random.Next(0, possibleCols.Length)];
+        
+        // Verify that the position is not occupied
+        bool isValidPos = false;
+        while (!isValidPos)
+        {
+            isValidPos = true;
+            for(int i = 0; i < startingPoints.GetLength(0); i++)
+            {
+                if (startingPoints[i, 0] == row && startingPoints[i, 1] == col) // Si se encontro un repetido
+                {
+                    isValidPos = false; 
+                    row = random.Next(0, GlobalData.fieldRows);
+                    col = possibleCols[random.Next(0, possibleCols.Length)];
+                    break;
+                }
+            }
+        }
+        
+        // return the position
+        int[] pos = new int[] {row, col};
+        return pos;
     }
     
-    
+    int[] GetTopBottomPos(int[,] startingPoints)
+    {
+        // Get an initial col and row
+        System.Random random = new System.Random();
+        int col = random.Next(0, GlobalData.fieldCols);
+        int[] possibleRows =  new int[] {-1, GlobalData.fieldRows};
+        int row = possibleRows[random.Next(0, possibleRows.Length)];
+        
+        // Verify that the position is not occupied
+        bool isValidPos = false;
+        while (!isValidPos)
+        {
+            isValidPos = true;
+            for(int i = 0; i < startingPoints.GetLength(0); i++)
+            {
+                if (startingPoints[i, 0] == row && startingPoints[i, 1] == col) // Si se encontro un repetido
+                {
+                    isValidPos = false; 
+                    col = random.Next(0, GlobalData.fieldCols);
+                    row = possibleRows[random.Next(0, possibleRows.Length)];
+                    break;
+                }
+            }
+        }
+        
+        // return the position
+        int[] pos = new int[] {row, col};
+        return pos;
+    }
     void InstantiateHarvesters()
     {
         Harvester[] harvesters = new Harvester[GlobalData.numHarvesters];
@@ -29,53 +137,35 @@ public class FieldController : MonoBehaviour
         
         for (int i = 0; i < GlobalData.numHarvesters; i++)
         {
-            // Get the initial col and row of the harvester
+            // Define if it is going to be spawned on the sides or on the top/bottom
             System.Random random = new System.Random();
-            int row = random.Next(0, GlobalData.fieldRows);
-            int[] possibleCols =  new int[] {0, GlobalData.fieldCols - 1};
-            int col = possibleCols[random.Next(0, possibleCols.Length)];
-            if(col == 0)
-                col += -1;
-            else
-                col += 1;
+            int side = random.Next(0, 2); // 0 = left/right, 1 = top/bottom
+            int[] pos = new int[2];; 
+            if (side == 0)
+                pos = GetLeftRightPos(startingPoints);
+            else if (side == 1)
+                pos = GetTopBottomPos(startingPoints); 
             
-            // Verify that the position is not occupied
-            for(int j = 0; j < harvesters.Length; j++)
-            {
-                if (harvesters[j] == null)
-                    break; 
-                
-                if(harvesters[j].currentRow == row && harvesters[j].currentCol == col)
-                {
-                    row = random.Next(0, GlobalData.fieldRows);
-                    col = possibleCols[random.Next(0, possibleCols.Length)];
-                    if(col == 0)
-                        col += -1;
-                    else 
-                        col += 1;
-                }
-            }
-            
+            startingPoints[i, 0] = pos[0];
+            startingPoints[i, 1] = pos[1];
             
             // Instantiate the harvester
             GameObject harvester = Instantiate(harvesterPrefab);
             Harvester harvesterScript = harvester.GetComponent<Harvester>(); 
-            harvesterScript.currentRow = row;
-            harvesterScript.currentCol = col;
-            harvesterScript.PutOnPosition(row, col); 
+            harvesterScript.currentRow = pos[0];
+            harvesterScript.currentCol = pos[1];
+            harvesterScript.PutOnPosition(pos[0], pos[1]); 
             harvesters[i] = harvesterScript;
-            
-            // Add the starting point to the array
-            startingPoints[i, 0] = row;
-            if(col == -1)
-                startingPoints[i, 1] = 0;
-            else
-                startingPoints[i, 1] = GlobalData.fieldCols - 1;
         }
         
         // Set the array of harvesters on GlobalData
         GlobalData.harvesters = harvesters;
         GlobalData.harvestersStartingPoints = startingPoints;
+    }
+
+    void AssignRouteToHarvesters()
+    {
+        // TODO: Asignar la ruta a cada harvester
     }
 
     void CreateGlobalMatrix()

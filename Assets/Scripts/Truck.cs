@@ -36,9 +36,6 @@ public class Truck : MonoBehaviour
     
     void Start()
     {
-        currentRow = 0;
-        currentCol = -1;
-        PutOnPosition(0, 0); // index is 0-based
     }
 
     void Update()
@@ -91,16 +88,16 @@ public class Truck : MonoBehaviour
         path = path[1..]; // Remove the first element of the array
     }
 
-    void PutOnPosition(int row, int col)
+    public void PutOnPosition(int row, int col)
     {
-        if (col == 0) // starting on the left side
+        if (col == -1) // starting on the left side
         {
-            transform.position = new Vector3(0, 0, row * GlobalData.unit_zSize) + new Vector3(-4f, 0, 2f); 
+            transform.position = new Vector3(0, 0, row * GlobalData.unit_zSize) + new Vector3(-12f, 0, 2f); 
             transform.rotation = Quaternion.Euler(0, 270, 0);
-        } else if(col == GlobalData.fieldCols - 1) // starting on the right side
+        } else
         {
             transform.rotation = Quaternion.Euler(0, 90, 0);
-            transform.position = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize) + new Vector3(4f, 0, 2f);
+            transform.position = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize) + new Vector3(6.5f, 0, 2f);
         }
     }
 

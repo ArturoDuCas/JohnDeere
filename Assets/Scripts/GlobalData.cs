@@ -18,12 +18,11 @@ public static class GlobalData
 
     
     // Harvesters data 
-    public static int numHarvesters = 2;
+    public static int numHarvesters = 4;
     public static int[,] harvestersStartingPoints;
     public static Harvester[] harvesters;
     
-    
-
-
-
+    // Truck data
+    public static int numTrucks = 2;
+    public static Truck[] trucks;
 }
