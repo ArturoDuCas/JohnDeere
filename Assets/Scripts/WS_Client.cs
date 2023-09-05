@@ -119,7 +119,7 @@ public class WS_Client : MonoBehaviour
     {
         var message = new Msg_SendStartingPoints
         {
-            type = "starting_points",
+            type = "starting_harvester_data",
             data = new PositionsAndFieldMatrixObject
             {
                 startingPoints = startingPoints,
