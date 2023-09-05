@@ -21,7 +21,6 @@ public static class GlobalData
     public static int numHarvesters = 2;
     public static Harvester[] harvesters;
 
-    public static int numHarvesters = 2;
 
 
 }

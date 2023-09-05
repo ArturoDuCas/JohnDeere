@@ -114,7 +114,6 @@ public class Harvester : MonoBehaviour
 
     public void PutOnPosition(int row, int col)
     {
-        Debug.Log("Putting harvester on position " + row + ", " + col);
         if (col == -1) // starting on the left side
         {
             transform.position = new Vector3(0f, 0, row * GlobalData.unit_zSize) + new Vector3(-5.5f, 0, 2.7f); // -3.6 + 5.5

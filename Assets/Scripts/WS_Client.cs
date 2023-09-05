@@ -115,17 +115,18 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage); 
     }
 
-    public void SendStartingPoints(int row, int col)
+    public void SendStartingPoints(int[,] startingPoints)
     {
-        var message = new Message
+        var message = new MSg_SendStartingPoints
         {
             type = "starting_points",
-            data = new { Row = row, Col = col }
-        }
+            data = startingPoints
+            
+        }; 
 
-        var jsonMessage = JsonUtility.ToJson(message); 
+        var jsonMessage = JsonUtility.ToJson(message);
 
-        ws.Send(jsonMessage)
+        ws.Send(jsonMessage); 
 
     }
 

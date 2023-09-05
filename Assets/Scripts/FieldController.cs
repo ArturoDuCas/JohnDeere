@@ -25,6 +25,8 @@ public class FieldController : MonoBehaviour
     void InstantiateHarvesters()
     {
         Harvester[] harvesters = new Harvester[GlobalData.numHarvesters];
+        int[,] startingPoints = new int[GlobalData.numHarvesters, 2];
+        
         for (int i = 0; i < GlobalData.numHarvesters; i++)
         {
             // Get the initial col and row of the harvester
@@ -62,10 +64,19 @@ public class FieldController : MonoBehaviour
             harvesterScript.currentCol = col;
             harvesterScript.PutOnPosition(row, col); 
             harvesters[i] = harvesterScript;
+            
+            // Add the starting point to the array
+            startingPoints[i, 0] = row;
+            if(col == -1)
+                startingPoints[i, 1] = 0;
+            else
+                startingPoints[i, 1] = GlobalData.fieldCols - 1;
         }
         
         // Set the array of harvesters on GlobalData
         GlobalData.harvesters = harvesters;
+
+        WS_Client.SendStartingPoints(startingPoints); 
     }
 
     void CreateGlobalMatrix()
