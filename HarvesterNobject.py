@@ -4,8 +4,6 @@ Created on Mon Sep  3 17:40:03 2023
 
 @author: oscar
 """
-
-# Required Libraries
 import numpy as np
 import heapq
 import random
