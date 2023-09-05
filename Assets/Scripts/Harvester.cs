@@ -266,12 +266,11 @@ public class Harvester : MonoBehaviour
         
         
         GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
-        Common.printMatrix(GlobalData.fieldMatrix);
+        // Common.printMatrix(GlobalData.fieldMatrix);
         
         wsClient.SendGasCapacity(fuel);
         
-        string json = ConvertMatrixToJson(GlobalData.fieldMatrix);        
-        wsClient.SendCampo(json);
+            
     }
     
 }

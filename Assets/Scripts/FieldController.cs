@@ -16,7 +16,7 @@ public class FieldController : MonoBehaviour
     {
         CreateField();
         UpdateParentPosition();
-        // wsClient = FindObjectOfType<WS_Client>(); 
+        wsClient = FindObjectOfType<WS_Client>(); 
 
         InstantiateHarvesters(); 
     }
@@ -75,9 +75,7 @@ public class FieldController : MonoBehaviour
         
         // Set the array of harvesters on GlobalData
         GlobalData.harvesters = harvesters;
-        
-        
-        wsClient.SendInitialHarvesterData(startingPoints); 
+        GlobalData.harvestersStartingPoints = startingPoints;
     }
 
     void CreateGlobalMatrix()
@@ -93,8 +91,7 @@ public class FieldController : MonoBehaviour
                 matrix[i, j] = 1;
             }
         }
-
-        Common.printMatrix(matrix);
+        
         // Set the matrix on GlobalData
         GlobalData.fieldMatrix = matrix;
 

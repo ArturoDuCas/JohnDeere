@@ -27,4 +27,19 @@ public static class Common
         Debug.Log(arrayString);
     }
     
+    public static void printInt2DArray(int[,] arr)
+    {
+        string arrayString = "";
+        for (int i = 0; i < arr.GetLength(0); i++)
+        {
+            arrayString += "[";
+            for (int j = 0; j < arr.GetLength(1); j++)
+            {
+                arrayString += arr[i, j] + ", ";
+            }
+            arrayString += "]\n";
+        }
+        Debug.Log(arrayString);
+    }
+    
 }

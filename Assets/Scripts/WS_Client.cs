@@ -1,5 +1,6 @@
 using WebSocketSharp; 
 using UnityEngine;
+using Newtonsoft.Json;
 using System.Text.Json;
 using System.Collections.Generic; // Add this using directive
 
@@ -7,7 +8,7 @@ using System.Collections.Generic; // Add this using directive
 
 public class WS_Client : MonoBehaviour
 {
-    private WebSocket ws;
+    public WebSocket ws;
 
     [System.Serializable]
     private class FieldMatrixMessage
@@ -16,9 +17,13 @@ public class WS_Client : MonoBehaviour
         public int[,] data;
     }
 
-    void Start()
+    void Awake()
     {
         ws = new WebSocket("ws://localhost:8080");
+    }
+    void Start()
+    {
+        
 
         ws.OnMessage += (sender, e) =>
         {
@@ -55,6 +60,20 @@ public class WS_Client : MonoBehaviour
         {
             ws.Send("Hello");
         }
+    }
+    
+    public static string ConvertMatrixToJson(int[,] matrix)
+    {
+        // Create a class to hold your matrix
+        var matrixData = new
+        {
+            Data = matrix
+        };
+
+        // Convert the matrix data to a JSON string
+        string json = JsonConvert.SerializeObject(matrixData);
+
+        return json;
     }
 
     void getFieldDimensions(string data)
@@ -102,35 +121,33 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage); 
     }
 
-   public void SendCampo(string fieldMatrix)
+   // public void SendCampo(string fieldMatrix)
+   //  {
+   //      var message = new Message
+   //      {
+   //          type = "field_matrix",
+   //          data = fieldMatrix
+   //      };
+   //
+   //      var jsonMessage = JsonUtility.ToJson(message); 
+   //
+   //      ws.Send(jsonMessage); 
+   //  }
+
+    public void SendInitialHarvesterData()
     {
-        var message = new Message
-        {
-            type = "field_matrix",
-            data = fieldMatrix
-        };
-
-        var jsonMessage = JsonUtility.ToJson(message); 
-
-        ws.Send(jsonMessage); 
-    }
-
-    public void SendInitialHarvesterData(int[,] startingPoints)
-    {
+        string startingPointsJson = ConvertMatrixToJson(GlobalData.harvestersStartingPoints);    
+        string fieldMatrixJson = ConvertMatrixToJson(GlobalData.fieldMatrix);
         var message = new Msg_SendStartingPoints
         {
             type = "starting_harvester_data",
-            data = new PositionsAndFieldMatrixObject
-            {
-                startingPoints = startingPoints,
-                fieldMatrix = GlobalData.fieldMatrix
-            }
-        }; 
-
+            startingPoints = startingPointsJson,
+            fieldMatrix = fieldMatrixJson
+        };
+        
         var jsonMessage = JsonUtility.ToJson(message);
-
+        
         ws.Send(jsonMessage); 
-
     }
 
 

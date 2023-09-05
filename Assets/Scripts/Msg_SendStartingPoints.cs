@@ -5,5 +5,6 @@
 public class Msg_SendStartingPoints
 {
     public string type;
-    public PositionsAndFieldMatrixObject data;
+    public string startingPoints;
+    public string  fieldMatrix;
 }
