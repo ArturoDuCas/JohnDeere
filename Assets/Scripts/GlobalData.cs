@@ -3,8 +3,8 @@ using System.Collections.Generic;
 public static class GlobalData
 {
     // Field data
-    public static int fieldCols = 2;
-    public static int fieldRows = 2;
+    public static int fieldCols = 6;
+    public static int fieldRows = 6;
     public static int[,] fieldMatrix; // 0 = harvested, 1 = not-harvested, 2 = harvesting
     
     
@@ -18,6 +18,7 @@ public static class GlobalData
 
     
     // Harvesters data 
+    public static int numHarvesters = 2;
     public static Harvester[] harvesters;
 
     public static int numHarvesters = 2;

@@ -4,6 +4,7 @@ using UnityEngine;
 public class FieldController : MonoBehaviour
 {
     public GameObject unitPrefab;  // Corn section prefab
+    public GameObject harvesterPrefab; // Harvester prefab
 
     private WS_Client wsClient; 
 
@@ -17,7 +18,54 @@ public class FieldController : MonoBehaviour
         UpdateParentPosition();
         // wsClient = FindObjectOfType<WS_Client>(); 
 
-        GlobalData.harvesters = FindObjectsOfType<Harvester>(); 
+        InstantiateHarvesters(); 
+    }
+    
+    
+    void InstantiateHarvesters()
+    {
+        Harvester[] harvesters = new Harvester[GlobalData.numHarvesters];
+        for (int i = 0; i < GlobalData.numHarvesters; i++)
+        {
+            // Get the initial col and row of the harvester
+            System.Random random = new System.Random();
+            int row = random.Next(0, GlobalData.fieldRows);
+            int[] possibleCols =  new int[] {0, GlobalData.fieldCols - 1};
+            int col = possibleCols[random.Next(0, possibleCols.Length)];
+            if(col == 0)
+                col += -1;
+            else
+                col += 1;
+            
+            // Verify that the position is not occupied
+            for(int j = 0; j < harvesters.Length; j++)
+            {
+                if (harvesters[j] == null)
+                    break; 
+                
+                if(harvesters[j].currentRow == row && harvesters[j].currentCol == col)
+                {
+                    row = random.Next(0, GlobalData.fieldRows);
+                    col = possibleCols[random.Next(0, possibleCols.Length)];
+                    if(col == 0)
+                        col += -1;
+                    else 
+                        col += 1;
+                }
+            }
+            
+            
+            // Instantiate the harvester
+            GameObject harvester = Instantiate(harvesterPrefab);
+            Harvester harvesterScript = harvester.GetComponent<Harvester>(); 
+            harvesterScript.currentRow = row;
+            harvesterScript.currentCol = col;
+            harvesterScript.PutOnPosition(row, col); 
+            harvesters[i] = harvesterScript;
+        }
+        
+        // Set the array of harvesters on GlobalData
+        GlobalData.harvesters = harvesters;
     }
 
     void CreateGlobalMatrix()

@@ -35,7 +35,7 @@ public class Harvester : MonoBehaviour
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 15; 
+    private int grainCapacity = 100; 
     private int grainLoad = 0;
     
 
@@ -54,10 +54,6 @@ public class Harvester : MonoBehaviour
 
     void Start()
     {
-        currentRow = 0;
-        currentCol = -1;
-        GoToUnit(0,0);
-
         Instantiate(harvestParticlesPrefab, transform); 
         harvestParticles = GetComponentInChildren<ParticleSystem>();
 
@@ -116,36 +112,17 @@ public class Harvester : MonoBehaviour
     
     
 
-    void GoToUnit(int row, int col)
+    public void PutOnPosition(int row, int col)
     {
-        // Get the position of the unit
-        Vector3 unitLeftPosition = new Vector3(col * GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize);
-        Vector3 unitRightPosition = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize);
-        
-        
-        // Get the distance to the unit
-        float distanceToLeft = Vector3.Distance(transform.position, unitLeftPosition); 
-        float distanceToRight;
-        if(transform.rotation.y == 0)
+        Debug.Log("Putting harvester on position " + row + ", " + col);
+        if (col == -1) // starting on the left side
         {
-            distanceToRight = Vector3.Distance(transform.position, unitRightPosition + new Vector3(0, 0, 6));
-        }
-        else
-        {
-            distanceToRight = Vector3.Distance(transform.position, unitRightPosition);
-        }
-        
-        // Move to the closest distance to the unit
-        if (distanceToLeft < distanceToRight)
-        {
-            // MoveToCoordinates(unitLeftPosition);
-            transform.position = unitLeftPosition + posCorrectionRight;
+            transform.position = new Vector3(0f, 0, row * GlobalData.unit_zSize) + new Vector3(-5.5f, 0, 2.7f); // -3.6 + 5.5
             transform.rotation = Quaternion.Euler(0, 90, 0);
-        }
-        else
+        } else // starting on the right side
         {
-            transform.position = unitRightPosition + new Vector3(0, 0, 6); 
-            transform.rotation = Quaternion.Euler(0, 90, 0);
+            transform.position = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize) + new Vector3(-0.5f, 0, 2.7f); 
+            transform.rotation = Quaternion.Euler(0, 270, 0);
         }
     }
 
@@ -254,6 +231,11 @@ public class Harvester : MonoBehaviour
 
         return json;
     }
+
+    void CallTruck()
+    {
+        // TODO: Llamar al Qlearning para que obtenga las rutas 
+    }
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
@@ -274,6 +256,11 @@ public class Harvester : MonoBehaviour
         
         fuel -= fuelConsumption;
         grainLoad += GlobalData.grainsPerUnit;
+        if (grainLoad >= grainCapacity) // if the harvester is full, call the truck
+        {
+            CallTruck(); 
+        }
+        
         isMoving = false; 
         harvestParticles.Stop();
         

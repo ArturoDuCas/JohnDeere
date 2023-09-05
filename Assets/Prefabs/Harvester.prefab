@@ -144,7 +144,7 @@ MonoBehaviour:
   - {x: 1, y: 0}
   isMoving: 0
   finishedPath: 0
-  harvestParticles: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
+  harvestParticlesPrefab: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
 --- !u!1 &1012466589153592606
 GameObject:
   m_ObjectHideFlags: 0

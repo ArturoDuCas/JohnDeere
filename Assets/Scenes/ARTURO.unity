@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 2644440315228679228, guid: 0136d9deccfb85241a1398d82b5824c3, type: 3}
+  harvesterPrefab: {fileID: 751609630328389092, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
 --- !u!4 &225651407
 Transform:
   m_ObjectHideFlags: 0
@@ -346,6 +347,18 @@ MonoBehaviour:
   currentRow: 0
   currentCol: 0
   movementSpeed: 3
+  path:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: 3}
+  - {x: 1, y: 3}
+  - {x: 1, y: 2}
+  - {x: 1, y: 1}
+  - {x: 1, y: 0}
+  startPath: 0
+  finishedPath: 0
+  isMoving: 0
 --- !u!1 &1588574885
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,71 +464,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb78575886afd244b8fbd121450d2081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1954918686171529026
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 751609630328389092, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_Name
-      value: Harvester
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -20.07
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183674676683493496, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2398644235562150057, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: harvestParticles
-      value: 
-      objectReference: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
-    - target: {fileID: 2398644235562150057, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
-      propertyPath: harvestParticlesPrefab
-      value: 
-      objectReference: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
 --- !u!1001 &7271320196529421636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -583,5 +531,4 @@ SceneRoots:
   - {fileID: 1588574888}
   - {fileID: 779689522}
   - {fileID: 225651407}
-  - {fileID: 1954918686171529026}
   - {fileID: 7271320196529421636}
