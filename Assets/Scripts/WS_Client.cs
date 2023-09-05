@@ -163,7 +163,17 @@ public class WS_Client : MonoBehaviour
 
     public void SendInitialHarvesterData()
     {
-        string startingPointsJson = MatrixToJson(GlobalData.harvestersStartingPoints);    
+        // fix the starting points matrix
+        int[,] harvesterStartingPos = new int[GlobalData.numHarvesters, 2];
+        int[] pos = new int[2]; 
+        for (int i = 0; i < GlobalData.numHarvesters; i++)
+        {
+            pos = Common.FixHarvesterPositions(GlobalData.harvesters[i].currentRow, GlobalData.harvesters[i].currentCol);
+            harvesterStartingPos[i, 0] = pos[0];
+            harvesterStartingPos[i, 1] = pos[1];
+        }
+        
+        string startingPointsJson = MatrixToJson(harvesterStartingPos);    
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         var message = new Msg_SendInitialHarvesterData
         {

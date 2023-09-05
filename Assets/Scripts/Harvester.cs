@@ -19,7 +19,7 @@ public class Harvester : MonoBehaviour
     public int currentRow; 
     public int currentCol;
 
-    public Vector2[] path = { };
+    private Vector2[] path = { };
         
     // {
     //     new Vector2(0,0),
@@ -64,6 +64,7 @@ public class Harvester : MonoBehaviour
     {
         if (path.Length == 0)
         {
+            Debug.Log("Hola"); 
             return;
         }
         if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
