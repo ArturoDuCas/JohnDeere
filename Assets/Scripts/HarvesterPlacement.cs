@@ -18,8 +18,8 @@ public class HarvesterPlacement : MonoBehaviour
         // Calculate the total width required for all harvesters
         float totalWidth = (numHarvestersToPlace - 1) * harvesterSpacing;
 
-        // Calculate the starting x position
-        float startX = -totalWidth / 2;
+        // Calculate the starting x position to place the first harvester in the middle of the field
+        float startX = -totalWidth / 2 + harvesterSpacing * (numHarvestersToPlace - 1) / 2;
 
         for (int i = 0; i < numHarvestersToPlace; i++)
         {
@@ -29,7 +29,7 @@ public class HarvesterPlacement : MonoBehaviour
             float xPosition = startX + i * harvesterSpacing;
 
             // Adjust the z position if needed
-            float zPosition = -GlobalData.unit_zSize * 0.5f;
+            float zPosition = -GlobalData.unit_zSize * 0.99f;
 
             newHarvester.transform.position = new Vector3(xPosition, 0, zPosition);
         }
