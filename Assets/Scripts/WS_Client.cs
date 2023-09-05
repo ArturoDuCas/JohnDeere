@@ -187,7 +187,7 @@ public class WS_Client : MonoBehaviour
         ws.Send(jsonMessage); 
     }
 
-    public void SendHarvesterUnloadRequest(int finalRow, int finalCol)
+    public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
@@ -207,6 +207,7 @@ public class WS_Client : MonoBehaviour
         var message = new Msg_HarvesterUnloadRequest
         {
             type = "harvester_unload_request",
+            harvesterId = id.ToString(), 
             fieldMatrix = fieldMatrixJson,
             finalPos = finalPosition,
             trucksInitialPos = truckInitialPos

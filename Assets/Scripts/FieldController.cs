@@ -19,57 +19,10 @@ public class FieldController : MonoBehaviour
         
         CreateField();
         UpdateParentPosition();
-        InstantiateHarvesters();
-        InstantiateTrucks();
+        InstantiateHarvestersAndTrucks();
+
     }
-
-    void InstantiateTrucks()
-    {
-        Truck[] trucks = new Truck[GlobalData.numTrucks];
-        int[,] startingPoints = new int[GlobalData.numTrucks, 2];
-
-        for (int i = 0; i < GlobalData.numTrucks; i++)
-        {
-            // Get the initial col and row of the truck
-            System.Random random = new System.Random();
-            int row = random.Next(0, GlobalData.fieldRows);
-            int[] possibleCols = new int[] { 0, GlobalData.fieldCols - 1 };
-            int col = possibleCols[random.Next(0, possibleCols.Length)];
-            if (col == 0)
-                col += -1;
-            else
-                col += 1;
-
-            // Verify that the position is not occupied
-            // TODO: NO VERIFICA QUE LA NUEVA POSICION ESTE DESOCUPADA
-            for (int j = 0; j < trucks.Length; j++)
-            {
-                if (trucks[j] == null)
-                    break;
-
-                if (trucks[j].currentRow == row && trucks[j].currentCol == col)
-                {
-                    row = random.Next(0, GlobalData.fieldRows);
-                    col = possibleCols[random.Next(0, possibleCols.Length)];
-                    if (col == 0)
-                        col += -1;
-                    else
-                        col += 1;
-                }
-            }
-
-            // Instantiate the truck
-            GameObject truck = Instantiate(truckPrefab);
-            Truck truckScript = truck.GetComponent<Truck>();
-            truckScript.currentRow = row;
-            truckScript.currentCol = col;
-            truckScript.PutOnPosition(row, col);
-            trucks[i] = truckScript;
-        }
-        
-        // Set the truck array on GlobalData
-        GlobalData.trucks = trucks;
-    }
+    
 
     int[] GetLeftRightPos(int[,] startingPoints)
     {
@@ -130,10 +83,13 @@ public class FieldController : MonoBehaviour
         int[] pos = new int[] {row, col};
         return pos;
     }
-    void InstantiateHarvesters()
+    void InstantiateHarvestersAndTrucks()
     {
         Harvester[] harvesters = new Harvester[GlobalData.numHarvesters];
+        Truck[] trucks = new Truck[GlobalData.numTrucks];
         int[,] startingPoints = new int[GlobalData.numHarvesters, 2];
+        
+        int trucksInstantiated = 0;
         
         for (int i = 0; i < GlobalData.numHarvesters; i++)
         {
@@ -152,15 +108,31 @@ public class FieldController : MonoBehaviour
             // Instantiate the harvester
             GameObject harvester = Instantiate(harvesterPrefab);
             Harvester harvesterScript = harvester.GetComponent<Harvester>(); 
+            harvesterScript.id = i;
             harvesterScript.currentRow = pos[0];
             harvesterScript.currentCol = pos[1];
             harvesterScript.PutOnPosition(pos[0], pos[1]); 
             harvesters[i] = harvesterScript;
+            
+            // Instantiate the truck if possible
+            if (trucksInstantiated < GlobalData.numTrucks)
+            {
+                GameObject truck = Instantiate(truckPrefab);
+                Truck truckScript = truck.GetComponent<Truck>();
+                truckScript.currentRow = pos[0];
+                truckScript.currentCol = pos[1];
+                truckScript.PutOnPosition(pos[0], pos[1]);
+                trucks[i] = truckScript;
+                trucksInstantiated++;
+            }
         }
         
         // Set the array of harvesters on GlobalData
         GlobalData.harvesters = harvesters;
         GlobalData.harvestersStartingPoints = startingPoints;
+        
+        // Set the array of trucks on GlobalData
+        GlobalData.trucks = trucks;
     }
 
     void AssignRouteToHarvesters()

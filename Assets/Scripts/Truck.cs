@@ -94,10 +94,18 @@ public class Truck : MonoBehaviour
         {
             transform.position = new Vector3(0, 0, row * GlobalData.unit_zSize) + new Vector3(-12f, 0, 2f); 
             transform.rotation = Quaternion.Euler(0, 270, 0);
-        } else
+        } else if(col == GlobalData.fieldCols) // starting on the right side
         {
-            transform.rotation = Quaternion.Euler(0, 90, 0);
             transform.position = new Vector3(col * GlobalData.unit_xSize + GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize) + new Vector3(6.5f, 0, 2f);
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        } else if(row == -1) // starting on the bottom side
+        {
+            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, 0) + new Vector3(-0.5f, 0, -12f);
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        } else if(row == GlobalData.fieldRows) // starting on the top side
+        {
+            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize + GlobalData.unit_zSize) + new Vector3(3f, 0, 5f);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 

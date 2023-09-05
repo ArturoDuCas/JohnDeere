@@ -23,6 +23,6 @@ public static class GlobalData
     public static Harvester[] harvesters;
     
     // Truck data
-    public static int numTrucks = 2;
+    public static int numTrucks = 4;
     public static Truck[] trucks;
 }

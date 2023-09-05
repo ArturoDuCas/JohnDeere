@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 public class Harvester : MonoBehaviour
 {
     public LayerMask cornLayer;
+
+    public int id;
     
     private float movementSpeed = 2.0f;
     private float actualSpeed; 
@@ -19,7 +21,7 @@ public class Harvester : MonoBehaviour
     public int currentRow; 
     public int currentCol;
 
-    private Vector2[] path = { };
+    private Vector2[] path;
         
     // {
     //     new Vector2(0,0),
@@ -57,6 +59,9 @@ public class Harvester : MonoBehaviour
         harvestParticles = GetComponentInChildren<ParticleSystem>();
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
+
+        path = new Vector2[5];
+        CreateFakePath(); 
     }
 
 
@@ -64,7 +69,6 @@ public class Harvester : MonoBehaviour
     {
         if (path.Length == 0)
         {
-            Debug.Log("Hola"); 
             return;
         }
         if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
@@ -81,6 +85,35 @@ public class Harvester : MonoBehaviour
             }
         }
         
+    }
+
+    void CreateFakePath()
+    {
+        if (currentRow == -1) // if starting on the bottom
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                path[i] = new Vector2(i, currentCol); 
+            }
+        } else if (currentRow == GlobalData.fieldRows) // if starting on the top 
+        {
+            for(int i = 0; i < 5; i++) 
+            {
+                path[i] = new Vector2(GlobalData.fieldRows - i - 1, currentCol); 
+            }
+        } else if (currentCol == -1) // if starting on the left
+        {
+            for(int i = 0; i < 5; i++) 
+            {
+                path[i] = new Vector2(currentRow, i); 
+            }
+        } else if (currentCol == GlobalData.fieldCols) // if starting on the right
+        {
+            for(int i = 0; i < 5; i++) 
+            {
+                path[i] = new Vector2(currentRow, GlobalData.fieldCols - i - 1); 
+            }
+        }
     }
 
     void GetMovement()
@@ -276,7 +309,7 @@ public class Harvester : MonoBehaviour
         
         if (grainLoad >= grainCapacity) // if the harvester is full, call the truck
         {
-            wsClient.SendHarvesterUnloadRequest(currentRow, currentCol);
+            wsClient.SendHarvesterUnloadRequest(currentRow, currentCol, id);
         }
         wsClient.SendGasCapacity(fuel);
         
