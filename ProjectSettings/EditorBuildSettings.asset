@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/ClaudiaScene.unity
+    guid: b0b72d6d32786aa4dbf54af089d4093b
+  - enabled: 1
+    path: Assets/Scenes/DANIELA.unity
+    guid: 10ee0269c94201b41ae05cbd70180b25
   m_configObjects: {}
