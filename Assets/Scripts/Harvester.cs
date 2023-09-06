@@ -21,7 +21,7 @@ public class Harvester : MonoBehaviour
     public int currentRow; 
     public int currentCol;
 
-    private Vector2[] path;
+    public Vector2[] path;
         
     // {
     //     new Vector2(0,0),
