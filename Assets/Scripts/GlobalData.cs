@@ -4,9 +4,14 @@ public static class GlobalData
 {
     // Field data
     public static int fieldCols = 6 ; //Se asigna en WS_Client
+    Debug.Log("Updated fieldCols: " + GlobalData.fieldCols);
+
     public static int fieldRows = 6; //Se asigna en WS_Client
+    Debug.Log("Updated fieldRows: " + GlobalData.fieldRows);
     public static int[,] fieldMatrix; // 0 = harvested, 1 = not-harvested, 2 = harvesting
+
     public static int cornDensity = 100; // 0 - 100% 
+
     
     
     // Unit data
@@ -20,6 +25,7 @@ public static class GlobalData
     
     // Harvesters data 
     public static int numHarvesters = 2;
+    Debug.Log("Updated numHarvesters: " + GlobalData.numHarvesters);
     public static int[,] harvestersStartingPoints;
 
     public static Harvester[] harvesters;
