@@ -100,7 +100,7 @@ public class Truck : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 90, 0);
         } else if(row == -1) // starting on the bottom side
         {
-            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, 0) + new Vector3(-0.5f, 0, -12f);
+            transform.position = new Vector3(col * GlobalData.unit_xSize, 0, 0) + new Vector3(2.5f, 0, -12f);
             transform.rotation = Quaternion.Euler(0, 180, 0);
         } else if(row == GlobalData.fieldRows) // starting on the top side
         {

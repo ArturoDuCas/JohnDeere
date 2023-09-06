@@ -6,6 +6,7 @@ public static class GlobalData
     public static int fieldCols = 6 ; //Se asigna en WS_Client
     public static int fieldRows = 6; //Se asigna en WS_Client
     public static int[,] fieldMatrix; // 0 = harvested, 1 = not-harvested, 2 = harvesting
+    public static int cornDensity = 100; // 0 - 100% 
     
     
     // Unit data
@@ -18,7 +19,7 @@ public static class GlobalData
 
     
     // Harvesters data 
-    public static int numHarvesters = 4;
+    public static int numHarvesters = 2;
     public static int[,] harvestersStartingPoints;
 
     public static Harvester[] harvesters;

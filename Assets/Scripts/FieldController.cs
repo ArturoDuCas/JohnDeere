@@ -19,10 +19,81 @@ public class FieldController : MonoBehaviour
         
         CreateField();
         UpdateParentPosition();
+        OnDensityChange(); 
         InstantiateHarvestersAndTrucks();
 
     }
+
+    void AddRandomUnit()
+    {
+        System.Random random = new System.Random(); 
+        int row = random.Next(0, GlobalData.fieldRows);
+        int col = random.Next(0, GlobalData.fieldCols);
+        
+        // look for a unit that doesn't have corn
+        while(GlobalData.fieldMatrix[row, col] != 0)
+        {
+            row = random.Next(0, GlobalData.fieldRows);
+            col = random.Next(0, GlobalData.fieldCols);
+        }
+        
+        // add the corn
+        GlobalData.fieldMatrix[row, col] = 1;
+        GameObject unit = GameObject.Find($"Unit({row}, {col})");
+        Destroy(unit);
+       
+        GameObject newUnit = Instantiate(unitPrefab, new Vector3(col * GlobalData.unit_xSize + 3, 0, row * GlobalData.unit_zSize + 3), Quaternion.identity, transform);
+        newUnit.name = $"Unit({row}, {col})";
+    }
+
+
+    void DeleteRandomUnit() 
+    {
+        System.Random random = new System.Random();
+        int row = random.Next(0, GlobalData.fieldRows);
+        int col = random.Next(0, GlobalData.fieldCols);
+        
+        // look for a unit that has corn
+        while(GlobalData.fieldMatrix[row, col] != 1)
+        {
+            row = random.Next(0, GlobalData.fieldRows);
+            col = random.Next(0, GlobalData.fieldCols);
+        }
+        
+        // delete the corn
+        GlobalData.fieldMatrix[row, col] = 0;
+        GameObject unit = GameObject.Find($"Unit({row}, {col})");
+        unit.GetComponent<Unit>().DeleteCorn();
+    }
     
+    void OnDensityChange()
+    {
+        int numOfNotHarvestedUnits = Common.GetNumberOfNotHarvestedUnits(); 
+        int numOfHarvestedUnits = GlobalData.fieldRows * GlobalData.fieldCols - numOfNotHarvestedUnits;
+        int numOfTotalUnits = numOfHarvestedUnits + numOfNotHarvestedUnits;
+        
+        int numOfUnitsThatMustHave = numOfTotalUnits * GlobalData.cornDensity / 100;
+        
+        
+        Debug.Log("Number of units that must have: " + numOfUnitsThatMustHave);
+        Debug.Log("Number of not harvested units: " + numOfNotHarvestedUnits);
+        Debug.Log("Number of harvested units: " + numOfHarvestedUnits);
+        if (numOfUnitsThatMustHave > numOfNotHarvestedUnits) // if we need to add corns 
+        {
+            int numOfCornsToAdd = numOfUnitsThatMustHave - numOfNotHarvestedUnits;
+            for (int i = 0; i < numOfCornsToAdd; i++)
+            {
+                AddRandomUnit();
+            }
+        } else if (numOfUnitsThatMustHave < numOfNotHarvestedUnits) // if we need to delete corns
+        {
+            int numOfCornsToDelete = numOfNotHarvestedUnits - numOfUnitsThatMustHave;
+            for (int i = 0; i < numOfCornsToDelete; i++)
+            {
+                DeleteRandomUnit();
+            }
+        }
+    }
 
     int[] GetLeftRightPos(int[,] startingPoints)
     {
@@ -180,5 +251,27 @@ public class FieldController : MonoBehaviour
         transform.position += new Vector3(GlobalData.unit_xSize / 2, 0, GlobalData.unit_zSize / 2); 
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (GlobalData.cornDensity < 100)
+            {
+                GlobalData.cornDensity += 10; 
+            }
+            OnDensityChange();
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (GlobalData.cornDensity > 0)
+            {
+                GlobalData.cornDensity -= 10; 
+            }
+            OnDensityChange();
+        }
+
+    }
+
+
+    
     
 }

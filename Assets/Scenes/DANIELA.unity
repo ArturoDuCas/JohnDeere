@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 1544768325}
   - component: {fileID: 1544768326}
   - component: {fileID: 1544768327}
+  - component: {fileID: 1544768328}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -264,6 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fieldTransform: {fileID: 1544768325}
   unitPrefab: {fileID: 2644440315228679228, guid: 0136d9deccfb85241a1398d82b5824c3, type: 3}
+  camera: {fileID: 1626930952}
 --- !u!114 &1544768327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,8 +279,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   harvesterPrefab: {fileID: 751609630328389092, guid: f97e27a12e1d5914d8d5b8ea9c602bb1, type: 3}
-  numHarvestersToPlace: 8
-  harvesterSpacing: 4
+  harvesterSpacing: 5
+--- !u!114 &1544768328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544768323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ae96919c72a4343aaf191787101981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  harvesterVisualPrefab: {fileID: 751609630328389092, guid: f97e27a12e1d5914d8d5b8ea9c602bb1, type: 3}
 --- !u!1 &1626930952
 GameObject:
   m_ObjectHideFlags: 0
