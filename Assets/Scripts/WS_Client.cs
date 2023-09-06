@@ -63,17 +63,15 @@ public class WS_Client : MonoBehaviour
             }
             else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
+
+            } else if (message.type == "python_harvester")if (message.type == "python_harvester"){
+                Debug.Log("AQUI RECIBE EL MENSAJE" + message.data);
+
             }
             else
             {
                 Debug.Log("Mensaje recibido: " + message.data); 
-            }
-
-            //----- AQUI RECIBE LOS PATHS ----------- 
-            if (message.type == "python_harvester")
-            {
-                Debug.Log(message.data);
-            }
+            }  
         };
         
 
