@@ -25,6 +25,6 @@ public static class GlobalData
     public static Harvester[] harvesters;
     
     // Truck data
-    public static int numTrucks = 4; //Se asigna en WS_Client
+    public static int numTrucks = 2; //Se asigna en WS_Client
     public static Truck[] trucks;
 }

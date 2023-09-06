@@ -23,12 +23,6 @@ public class WS_Client : MonoBehaviour
         public int[,] data;
     }
 
-    [System.Serializable]
-    private class PythonResult
-    {
-        public int[] path;
-    }
-
     void Awake()
     {
         ws = new WebSocket("ws://localhost:8080");
@@ -48,26 +42,36 @@ public class WS_Client : MonoBehaviour
             } else if (message.type == "connect")
             {
                 Debug.Log("Established connection with: " + message.sender);
-            } else if (message.type == "field-dimensions")
+            } else if (message.type == "config_field-dimensionsX")
             {
-                getFieldDimensions(message.data);
-                Debug.Log(GlobalData.fieldCols.ToString() + GlobalData.fieldRows.ToString());
+                Debug.Log("config_field-dimensionsX" + message.data);
 
-            } else if (message.type == "config_harvester_number" ){
-                Debug.Log(message);
+            }  else if (message.type == "config_field-dimensionsY")
+            {
+                Debug.Log("config_field-dimensionsY" + message.data);
+
+            }else if (message.type == "config_harvester_number" ){
+                
+                Debug.Log("config_harvester_number" + message.data);
                 GlobalData.numTrucks = int.Parse(message.data);
 
             }else if(message.type == "config_field-density"){
-                Debug.Log(message.data);
+                Debug.Log("config_field"+message.data);
 
             }
             else if(message.type == "config_gas_capacity"){
+                Debug.Log("config_gas_capacity" + message.data);
                 harvester.fuel = int.Parse(message.data);
+
+            } else if(message.type == "config_harvester_speed"){
+                Debug.Log("config_harvester_speed" + message.data);
+
+            }else if (message.type == "python_harvester") {
+                //ansljkasndflkadjsn
             }
             else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
 
-            } else if (message.type == "python_harvester") {
                     // Vector2[] path = ParsePath(message.data);
                     Debug.Log("AQUI: " + message.data);
                     // Debug.Log("Path" + path);
@@ -95,6 +99,7 @@ public class WS_Client : MonoBehaviour
     
     string MatrixToJson(int[,] matrix)
     {
+
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
         StringBuilder jsonBuilder = new StringBuilder("[");
