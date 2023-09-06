@@ -6,10 +6,12 @@ using System.Collections.Generic;
 
 public class Truck : MonoBehaviour
 {
+    public int id; 
+    
     public int currentRow; 
     public int currentCol; 
     
-    public float movementSpeed = 3.0f;
+    private float movementSpeed = 6.0f;
     private float actualSpeed;
 
     private float fuel = 1200; 
@@ -17,48 +19,54 @@ public class Truck : MonoBehaviour
 
     public List<Vector2> path; 
 
-
-    public bool finishedPath = false;
-    public bool isMoving = false; 
+    
+    public bool isMoving = false;
+    public bool isGoingToFinish = false; 
         
         
-    private int grainCapacity = 15; 
-    private int grainLoad = 0;
+    private int grainCapacity = 10; 
+    public int grainLoad = 0;
     
     public bool isAviable = true;
+    public int targetHarvester; 
     void Start()
     {
     }
 
     void Update()
     {
-        if (path.Count == 0)
+        if (path.Count == 0 ) // if there is no path, return
+        {
+            if (isGoingToFinish) {
+                UnloadGrain();
+                isGoingToFinish = false;
+            }
+            return;
+        }
+        
+        if(fuel <= 0) // if fuel is over, stop moving
         {
             return;
         }
         
-        if(fuel <= 0) // if fuel is over or grain load is full, stop moving
+        if (!isMoving) // if the truck is not moving
         {
-            isMoving = false;
-            return;
-        }
-
-        if (!finishedPath) // if the path is not finished
-        {
-            if (!isMoving) // if the truck is not moving
-            {
-                GetMovement(); 
-            }
+            GetMovement(); 
         }
         
     }
 
+    void UnloadGrain()
+    {
+        
+        GlobalData.harvesters[targetHarvester].UnloadGrain(id);
+        isAviable = true;
+    }
     void GetMovement()
     {
-        if(path.Count == 0)
+        if (path.Count == 1)
         {
-            finishedPath = true;
-            return; 
+            isGoingToFinish = true;
         }
         
         isMoving = true;
@@ -75,6 +83,10 @@ public class Truck : MonoBehaviour
         } else if (currentRow > path[0].x) // Se mueve hacia abajo
         {
             MoveDown(); 
+        }
+        else
+        {
+            isMoving = false;
         }
         
         // Remove the first element of the array

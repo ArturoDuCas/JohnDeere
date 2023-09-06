@@ -193,20 +193,19 @@ public class WS_Client : MonoBehaviour
                 
                 if(GlobalData.trucks[truckWithMinRoute].isAviable)
                 {
-                    GlobalData.trucks[truckWithMinRoute].isAviable = false;
+                    GlobalData.trucks[truckWithMinRoute].targetHarvester = harvesterId;
                     List<Vector2> path = ConvertStringToVector2List(truckOptionsPaths[truckWithMinRoute]);
                     
                     GlobalData.trucks[truckWithMinRoute].path = path;
+                    
+                    GlobalData.trucks[truckWithMinRoute].isAviable = false;
                 }
                 else // TODO: Si no esta disponible, que el harvester pida otra ruta
                 {
                     
                 }
-                Debug.Log("Truck options: ");
-                PrintListOfInt(validTruckOptions);
-                Debug.Log("Truck options paths: ");
-                PrintListOfString(truckOptionsPaths);
-                Debug.Log("Truck elegido: " + truckWithMinRoute);
+
+                
             }
             
         };
@@ -235,6 +234,7 @@ public class WS_Client : MonoBehaviour
             Vector2 vector = new Vector2(int.Parse(segments[i]), int.Parse(segments[i + 1]));
             vectorList.Add(vector);
         }
+        
         
         return  vectorList;
     }

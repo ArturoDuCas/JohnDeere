@@ -11,7 +11,7 @@ public class Harvester : MonoBehaviour
 
     public int id;
     
-    private float movementSpeed = 2.0f;
+    private float movementSpeed = 4.0f;
     private float actualSpeed; 
 
     public float fuel = 1000; //Se asigna en WS_Client 
@@ -23,11 +23,12 @@ public class Harvester : MonoBehaviour
     public int currentCol;
 
     public List<Vector2> path;
+    public Vector2 lastPos; 
 
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 10; 
+    private int grainCapacity = 20; 
     public int grainLoad = 0;
     
 
@@ -39,14 +40,18 @@ public class Harvester : MonoBehaviour
     private Vector3 posCorrectionLeft = new Vector3(5.2f, 0f, 2.8f);
     private Vector3 posCorrectionDown = new Vector3(-3.2f, 0f, 5.1f); 
     
+    public ParticleSystem unloadParticlesPrefab;
+    private ParticleSystem unloadParticles;
     public ParticleSystem harvestParticlesPrefab;
     private ParticleSystem harvestParticles;
+    
 
 
     void Start()
     {
-        Instantiate(harvestParticlesPrefab, transform); 
-        harvestParticles = GetComponentInChildren<ParticleSystem>();
+        harvestParticles = Instantiate(harvestParticlesPrefab, transform); 
+        
+        
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
     }
@@ -84,6 +89,8 @@ public class Harvester : MonoBehaviour
             finishedPath = true;
             return; 
         }
+        
+        lastPos = new Vector2(currentRow, currentCol); 
         
         isMoving = true;
         if(GlobalData.fieldMatrix[(int) path[0].x, (int) path[0].y] == 1) // if the unit has corn
@@ -238,6 +245,30 @@ public class Harvester : MonoBehaviour
 
         return json;
     }
+
+    public void UnloadGrain(int id)
+    {
+        StartCoroutine(UnloadProcessCoroutine(id)); 
+    }
+
+    IEnumerator UnloadProcessCoroutine(int id)
+    {
+        yield return new WaitForSeconds(.5f); 
+        
+        unloadParticles = Instantiate(unloadParticlesPrefab, transform); 
+
+        // Espera 5 segundos
+        yield return new WaitForSeconds(5f);
+        
+        Destroy(unloadParticles);
+        GlobalData.trucks[id].grainLoad += grainLoad; 
+        GlobalData.trucks[id].isAviable = true;
+        
+        grainLoad = 0;
+        
+    }
+    
+    
     
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
@@ -266,14 +297,15 @@ public class Harvester : MonoBehaviour
         
         
         
-        GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
-        // Common.printMatrix(GlobalData.fieldMatrix);
-        
-        
         if (grainLoad >= grainCapacity) // if the harvester is full, call the truck
         {
-            wsClient.SendHarvesterUnloadRequest(currentRow, currentCol, id);
+            wsClient.SendHarvesterUnloadRequest((int)lastPos.x, (int)lastPos.y, id);
         }
+        
+        GlobalData.fieldMatrix[currentRow, currentCol] = 0; 
+        
+        
+        
         wsClient.SendGasCapacity(fuel);
         
             

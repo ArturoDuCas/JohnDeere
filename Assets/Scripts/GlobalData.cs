@@ -19,12 +19,12 @@ public static class GlobalData
 
     
     // Harvesters data 
-    public static int numHarvesters = 2;
+    public static int numHarvesters = 1;
     public static int[,] harvestersStartingPoints;
 
     public static Harvester[] harvesters;
     
     // Truck data
-    public static int numTrucks = 2; //Se asigna en WS_Client
+    public static int numTrucks = 1; //Se asigna en WS_Client
     public static Truck[] trucks;
 }

@@ -477,6 +477,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb78575886afd244b8fbd121450d2081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jsonString: 
+  harvester: {fileID: 0}
+  idText: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -75,9 +75,9 @@ public class FieldController : MonoBehaviour
         int numOfUnitsThatMustHave = numOfTotalUnits * GlobalData.cornDensity / 100;
         
         
-        Debug.Log("Number of units that must have: " + numOfUnitsThatMustHave);
-        Debug.Log("Number of not harvested units: " + numOfNotHarvestedUnits);
-        Debug.Log("Number of harvested units: " + numOfHarvestedUnits);
+        // Debug.Log("Number of units that must have: " + numOfUnitsThatMustHave);
+        // Debug.Log("Number of not harvested units: " + numOfNotHarvestedUnits);
+        // Debug.Log("Number of harvested units: " + numOfHarvestedUnits);
         if (numOfUnitsThatMustHave > numOfNotHarvestedUnits) // if we need to add corns 
         {
             int numOfCornsToAdd = numOfUnitsThatMustHave - numOfNotHarvestedUnits;
@@ -166,7 +166,8 @@ public class FieldController : MonoBehaviour
         {
             // Define if it is going to be spawned on the sides or on the top/bottom
             System.Random random = new System.Random();
-            int side = random.Next(0, 2); // 0 = left/right, 1 = top/bottom
+            // int side = random.Next(0, 2); // 0 = left/right, 1 = top/bottom 
+            int side = 0;  // TODO: QUITAR EL HARCODEO, DESCOMENTAR LINEA DE ARRIBA
             int[] pos = new int[2];; 
             if (side == 0)
                 pos = GetLeftRightPos(startingPoints);
@@ -193,6 +194,7 @@ public class FieldController : MonoBehaviour
                 truckScript.currentRow = pos[0];
                 truckScript.currentCol = pos[1];
                 truckScript.PutOnPosition(pos[0], pos[1]);
+                truckScript.id = trucksInstantiated;
                 trucks[i] = truckScript;
                 trucksInstantiated++;
             }
@@ -205,7 +207,6 @@ public class FieldController : MonoBehaviour
         // Set the array of trucks on GlobalData
         GlobalData.trucks = trucks;
         
-        Debug.Log("Longitud de trucks " + trucks.Length);
     }
 
     void AssignRouteToHarvesters()

@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1183674676683493496}
-  - component: {fileID: 2398644235562150057}
+  - component: {fileID: 2592986317460593466}
   m_Layer: 0
   m_Name: Harvester
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   - {fileID: 3412537199977294058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2398644235562150057
+--- !u!114 &2592986317460593466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,6 +139,7 @@ MonoBehaviour:
   isMoving: 0
   finishedPath: 0
   grainLoad: 0
+  unloadParticlesPrefab: {fileID: 1948885247552904478, guid: 83365ee8867967b4e8d7ae39130a881c, type: 3}
   harvestParticlesPrefab: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
 --- !u!1 &1012466589153592606
 GameObject:
