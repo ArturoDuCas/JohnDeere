@@ -2,7 +2,10 @@ using WebSocketSharp;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.Text; 
+using UnityEngine.UI;
 using System.Text.Json;
+using TMPro;
+
 using System.Collections.Generic; // Add this using directive
 
 
@@ -12,6 +15,7 @@ public class WS_Client : MonoBehaviour
     public WebSocket ws;
     FieldController fieldController;
     public Harvester harvester; 
+    public TextMeshProUGUI idText;
 
     [System.Serializable]
     private class FieldMatrixMessage
@@ -42,6 +46,9 @@ public class WS_Client : MonoBehaviour
             {
                 Debug.Log("ID: " + message.data);
                 GlobalData.selfID = message.data;
+
+                idText.text = GlobalData.selfID;
+
             } else if (message.type == "connect")
             {
                 Debug.Log("Established connection with: " + message.sender);
