@@ -5,22 +5,23 @@ public class FieldControllerSetUp : MonoBehaviour
 {
     public Transform fieldTransform;
     public GameObject unitPrefab;  
-    public GameObject unitPrefab2; 
 
     private WS_Client wsClient;
-
-    void Awake()
-    {
-        CreateGlobalMatrix(); // Create the matrix of corn sections on GlobalData
-    }
 
     void Start()
     {
         CreateField();
         UpdateParentPosition();
         // wsClient = FindObjectOfType<WS_Client>();
+        
+    }
 
-        GlobalData.harvesters = FindObjectsOfType<Harvester>();
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            AddColumn();
+        }
     }
 
     void CreateGlobalMatrix()
@@ -63,12 +64,7 @@ public class FieldControllerSetUp : MonoBehaviour
     {
         transform.position += new Vector3(GlobalData.unit_xSize / 2, 0, GlobalData.unit_zSize / 2);
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Debug.Log("tecla");
-            AddColumn();
-            
-        }
+        
        
     }
 
@@ -76,17 +72,16 @@ public class FieldControllerSetUp : MonoBehaviour
 void AddColumn()
 {
     int newCol = GlobalData.fieldCols; 
-    GlobalData.fieldCols++; // 
+    GlobalData.fieldCols++; 
 
     // pasa por cada row y pone uno 
     for (int row = 0; row < GlobalData.fieldRows; row++)
     {
-        GameObject newUnit = Instantiate(unitPrefab2, transform);
+        GameObject newUnit = Instantiate(unitPrefab, transform);
+        
+        Vector3 newPosition = new Vector3(newCol  * GlobalData.unit_xSize + 3, 0, row * GlobalData.unit_zSize + 3);
 
-        // calcula posicion
-        Vector3 newPosition = new Vector3(newCol * GlobalData.unit_xSize, 0, row * GlobalData.unit_zSize);
 
-        // set y nonmbre me lo copie de arturo 
         newUnit.transform.position = newPosition;
         newUnit.name = $"Unit({row}, {newCol})";
 

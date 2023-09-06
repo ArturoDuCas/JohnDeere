@@ -79,5 +79,23 @@ public static class Common
         
         return new int[] {row, col};
     }
+
+    public static int GetNumberOfNotHarvestedUnits()
+    {
+        int res = 0; 
+        for(int i = 0; i < GlobalData.fieldRows; i++)
+        {
+            for(int j = 0; j < GlobalData.fieldCols; j++)
+            {
+                if (GlobalData.fieldMatrix[i, j] == 1)
+                {
+                    res += 1;
+                }
+            }
+        }
+
+
+        return res; 
+    }
     
 }
