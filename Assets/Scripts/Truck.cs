@@ -1,5 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+
+
 
 public class Truck : MonoBehaviour
 {
@@ -11,22 +14,10 @@ public class Truck : MonoBehaviour
 
     private float fuel = 1200; 
     float fuelConsumption = 20;
-    
-    public Vector2[] path =
-        
-    {
-        new Vector2(0,0),
-        new Vector2(0,1), 
-        new Vector2(0,2),
-        new Vector2(0,3),
-        new Vector2(1, 3),
-        new Vector2(1,2), 
-        new Vector2(1,1),
-        new Vector2(1,0),
-    };
+
+    public List<Vector2> path; 
 
 
-    public bool startPath = false; 
     public bool finishedPath = false;
     public bool isMoving = false; 
         
@@ -41,18 +32,18 @@ public class Truck : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (path.Count == 0)
         {
-            startPath = true;  
+            return;
         }
-
+        
         if(fuel <= 0) // if fuel is over or grain load is full, stop moving
         {
             isMoving = false;
             return;
         }
 
-        if (!finishedPath && startPath) // if the path is not finished
+        if (!finishedPath) // if the path is not finished
         {
             if (!isMoving) // if the truck is not moving
             {
@@ -64,7 +55,7 @@ public class Truck : MonoBehaviour
 
     void GetMovement()
     {
-        if(path.Length == 0)
+        if(path.Count == 0)
         {
             finishedPath = true;
             return; 
@@ -86,7 +77,8 @@ public class Truck : MonoBehaviour
             MoveDown(); 
         }
         
-        path = path[1..]; // Remove the first element of the array
+        // Remove the first element of the array
+        path.RemoveAt(0);
     }
 
     public void PutOnPosition(int row, int col)

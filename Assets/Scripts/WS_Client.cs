@@ -74,8 +74,6 @@ public class WS_Client : MonoBehaviour
             } else if(message.type == "config_harvester_speed"){
                 Debug.Log("config_harvester_speed" + message.data);
 
-            }else if (message.type == "python_harvester") {
-                //ansljkasndflkadjsn
             }
             else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
@@ -126,15 +124,166 @@ public class WS_Client : MonoBehaviour
                 }
             } else if (message.type == "truck_python")
             {
+                // first line: harvester id
+                // second line: trucks ids
+                // the rest: paths of the trucks 
+                
                 string[] lines = message.data.Split('\n');
-                Debug.Log(lines[0]);
-                Debug.Log(lines[1]);
-                Debug.Log(lines[2]);
+                int harvesterId = int.Parse(lines[0]); 
+                List<int> truckOptions = JsonConvert.DeserializeObject<List<int>>(lines[1]);
+                List<string> truckOptionsPaths = new List<string>(); 
+                
+                
+                
+                // create the list of the paths
+                for(int i = 2; i < lines.Length; i++)
+                {
+                    truckOptionsPaths.Add(lines[i]);
+                }
+                
+                
+                // fix the truck options for eliminating those with path == [] 
+                List<int> validTruckOptions = new List<int>();
+                for (int i = 0; i < truckOptions.Count; i++)
+                {
+                    if(truckOptionsPaths[truckOptions[i]].Length > 4)
+                    {
+                        validTruckOptions.Add(truckOptions[i]);
+                    }
+                }
+                
+                
+                // get the shortest path
+                int truckWithMinRoute = validTruckOptions[0];
+                int minRouteSize = truckOptionsPaths[truckWithMinRoute].Length;
+                
+                for(int i = 0; i < validTruckOptions.Count; i++)
+                {
+                    if(truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
+                    {
+                        truckWithMinRoute = validTruckOptions[i];
+                        minRouteSize = truckOptionsPaths[validTruckOptions[i]].Length;
+                    }
+                }
+                
+                validTruckOptions.Remove(truckWithMinRoute);
+                
+                // if is not aviable, find the next min route
+                while (!GlobalData.trucks[truckWithMinRoute].isAviable)
+                {
+                    if(validTruckOptions.Count == 0) // No hay trucks disponibles
+                    {
+                        break;
+                    }
+                    
+                    truckWithMinRoute = validTruckOptions[0];
+                    minRouteSize = truckOptionsPaths[truckWithMinRoute].Length;
+                    for (int i = 0; i < validTruckOptions.Count; i++)
+                    {
+                        if(truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
+                        {
+                            truckWithMinRoute = validTruckOptions[i];
+                            minRouteSize = truckOptionsPaths[validTruckOptions[i]].Length;
+                        }
+                    }
+                    
+                    validTruckOptions.Remove(truckWithMinRoute);
+                }
+
+                
+                if(GlobalData.trucks[truckWithMinRoute].isAviable)
+                {
+                    GlobalData.trucks[truckWithMinRoute].isAviable = false;
+                    List<Vector2> path = ConvertStringToVector2List(truckOptionsPaths[truckWithMinRoute]);
+                    
+                    GlobalData.trucks[truckWithMinRoute].path = path;
+                }
+                else // TODO: Si no esta disponible, que el harvester pida otra ruta
+                {
+                    
+                }
+                Debug.Log("Truck options: ");
+                PrintListOfInt(validTruckOptions);
+                Debug.Log("Truck options paths: ");
+                PrintListOfString(truckOptionsPaths);
+                Debug.Log("Truck elegido: " + truckWithMinRoute);
             }
             
         };
         
         ws.Connect();
+    }
+
+    List<Vector2> ConvertStringToVector2List(string list)
+    {
+        // example of string: [[0, 0], [0, 1]]
+        
+        // remove the spaces
+        list = list.Replace(" ", "");
+        
+        // remove the first and last character
+        list = list.Substring(1, list.Length - 3);
+        
+        
+        // on this point the string looks like this: [0,0],[0,1]
+        string[] segments = list.Replace("[", "").Replace("]", "").Split(',');
+        
+        List<Vector2> vectorList = new List<Vector2>();
+        
+        for (int i = 0; i < segments.Length; i += 2)
+        {
+            Vector2 vector = new Vector2(int.Parse(segments[i]), int.Parse(segments[i + 1]));
+            vectorList.Add(vector);
+        }
+        
+        return  vectorList;
+    }
+    
+    void PrintListOfInt(List<int> list)
+    {
+        // Create a string builder to store the json
+        StringBuilder jsonBuilder = new StringBuilder("[");
+        
+        // Add each element to the json
+        
+for (int i = 0; i < list.Count; i++)
+        {
+            jsonBuilder.Append(list[i]);
+            if (i < list.Count - 1)
+            {
+                jsonBuilder.Append(",");
+            }
+        }
+
+        // Close the json
+        jsonBuilder.Append("]");
+        
+        // Print the json
+        Debug.Log(jsonBuilder.ToString());
+    }
+    
+    void PrintListOfString(List<string> list)
+    {
+        // Create a string builder to store the json
+        StringBuilder jsonBuilder = new StringBuilder("[");
+        
+        // Add each element to the json
+        
+for (int i = 0; i < list.Count; i++)
+        {
+            jsonBuilder.Append(list[i]);
+            if (i < list.Count - 1)
+            {
+                jsonBuilder.Append(",");
+            }
+        }
+
+        // Close the json
+        
+        jsonBuilder.Append("]");
+
+        // Print the json
+        Debug.Log(jsonBuilder.ToString());
     }
     
     void PrintListOfVector2(List<Vector2> list)
@@ -220,6 +369,25 @@ public class WS_Client : MonoBehaviour
 
         jsonBuilder.Append("]");
 
+        return jsonBuilder.ToString();
+    }
+
+    string ListOfIntToJson(List<int> lst)
+    {
+        StringBuilder jsonBuilder = new StringBuilder("[");
+        
+        for (int i = 0; i < lst.Count; i++)
+        {
+            jsonBuilder.Append(lst[i]);
+            
+            if (i < lst.Count - 1)
+            {
+                jsonBuilder.Append(",");
+            }
+        }
+        
+        jsonBuilder.Append("]");
+        
         return jsonBuilder.ToString();
     }
     
@@ -329,6 +497,7 @@ public class WS_Client : MonoBehaviour
         
         // Create the trucks initial positions matrix
         List<Vector2> truckInitialPosMatrix = new List<Vector2>();
+        List<int> trucksIds = new List<int>(); 
         int[] initialPos; 
         for (int i = 0; i < GlobalData.numTrucks; i++)
         {
@@ -337,9 +506,11 @@ public class WS_Client : MonoBehaviour
             
             initialPos = Common.FixTruckPositions(GlobalData.trucks[i].currentRow, GlobalData.trucks[i].currentCol);
             truckInitialPosMatrix.Add(new Vector2(initialPos[0], initialPos[1]));
+            trucksIds.Add(i); 
         }
         
-        string truckInitialPos = ListOfVector2ToJson(truckInitialPosMatrix); 
+        string truckInitialPos = ListOfVector2ToJson(truckInitialPosMatrix);
+        string trucksIdsJson = ListOfIntToJson(trucksIds);
         
         var message = new Msg_HarvesterUnloadRequest
         {
@@ -347,7 +518,8 @@ public class WS_Client : MonoBehaviour
             harvesterId = id.ToString(), 
             fieldMatrix = fieldMatrixJson,
             finalPos = finalPosition,
-            trucksInitialPos = truckInitialPos
+            trucksInitialPos = truckInitialPos,
+            trucksIds = trucksIdsJson
         };
         
         var jsonMessage = JsonUtility.ToJson(message);

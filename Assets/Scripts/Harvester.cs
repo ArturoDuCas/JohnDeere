@@ -27,7 +27,7 @@ public class Harvester : MonoBehaviour
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 5; 
+    private int grainCapacity = 10; 
     public int grainLoad = 0;
     
 
@@ -49,7 +49,6 @@ public class Harvester : MonoBehaviour
         harvestParticles = GetComponentInChildren<ParticleSystem>();
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
-        
     }
 
 

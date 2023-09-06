@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df10e521-ff49-429e-86b2-6a301db64f38" name="Changes" comment="" />
+    <list default="true" id="df10e521-ff49-429e-86b2-6a301db64f38" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Harvester.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Harvester.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Msg_HarvesterUnloadRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Msg_HarvesterUnloadRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Truck.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Truck.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WS_Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/WS_Client.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,6 +47,7 @@
       <updated>1693790177042</updated>
       <workItem from="1693790191405" duration="1328000" />
       <workItem from="1693885411318" duration="649000" />
+      <workItem from="1693998954152" duration="660000" />
     </task>
     <servers />
   </component>

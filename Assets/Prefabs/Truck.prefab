@@ -962,18 +962,10 @@ MonoBehaviour:
   currentRow: 0
   currentCol: 0
   movementSpeed: 3
-  path:
-  - {x: 0, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: 2}
-  - {x: 0, y: 3}
-  - {x: 1, y: 3}
-  - {x: 1, y: 2}
-  - {x: 1, y: 1}
-  - {x: 1, y: 0}
-  startPath: 0
+  path: []
   finishedPath: 0
   isMoving: 0
+  isAviable: 1
 --- !u!1 &2457566144992295601
 GameObject:
   m_ObjectHideFlags: 0
