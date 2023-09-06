@@ -204,6 +204,8 @@ public class FieldController : MonoBehaviour
         
         // Set the array of trucks on GlobalData
         GlobalData.trucks = trucks;
+        
+        Debug.Log("Longitud de trucks " + trucks.Length);
     }
 
     void AssignRouteToHarvesters()

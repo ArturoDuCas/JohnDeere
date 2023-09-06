@@ -131,19 +131,14 @@ MonoBehaviour:
   cornLayer:
     serializedVersion: 2
     m_Bits: 64
+  id: 0
+  fuel: 1000
   currentRow: 0
   currentCol: 0
-  path:
-  - {x: 0, y: 0}
-  - {x: 0, y: 1}
-  - {x: 0, y: 2}
-  - {x: 0, y: 3}
-  - {x: 1, y: 3}
-  - {x: 1, y: 2}
-  - {x: 1, y: 1}
-  - {x: 1, y: 0}
+  path: []
   isMoving: 0
   finishedPath: 0
+  grainLoad: 0
   harvestParticlesPrefab: {fileID: 7286605008206678615, guid: b7f5845b07ed56040974018a16419ad3, type: 3}
 --- !u!1 &1012466589153592606
 GameObject:

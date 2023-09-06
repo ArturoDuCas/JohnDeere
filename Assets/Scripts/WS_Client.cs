@@ -1,3 +1,4 @@
+using System;
 using WebSocketSharp; 
 using UnityEngine;
 using Newtonsoft.Json;
@@ -79,17 +80,82 @@ public class WS_Client : MonoBehaviour
             else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
 
-                    // Vector2[] path = ParsePath(message.data);
-                    Debug.Log("AQUI: " + message.data);
-                    // Debug.Log("Path" + path);
-
+            } else if (message.type == "python_harvester")
+            {
+                // message.data = [(0, 0), (0, 1), (0, 2), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (3, 2), (3, 1), (3, 0), (4, 0), (4, 1), (4, 2), (5, 2), (5, 1), (5, 0)] [(0, 1), (0, 0), (1, 0), (1, 1), (1, 2), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (3, 1), (3, 2), (4, 2), (4, 1), (4, 0), (5, 0), (5, 1), (5, 2)]
+                List<List<Vector2>> paths = new List<List<Vector2>>();
+                
+                string[] splitPaths = message.data.Split(']');
+                List<string> correctSplitPaths = new List<string>();
+                for(int i = 0; i < splitPaths.Length; i++)
+                {
+                    if(splitPaths[i].Length > 3)
+                    {
+                        string path = splitPaths[i]; 
+                        path = path.Replace("[", "");
+                        path = path.Replace(" ", "");
+                        correctSplitPaths.Add(path);
+                    }
+                }
+                
+                foreach(string path in correctSplitPaths)
+                {
+                    List<Vector2> pathList = new List<Vector2>();
+                    for(int i = 0; i < path.Length; i++)
+                    {
+                        if(path[i] == '(')
+                        {
+                            string coord = "";
+                            i++;
+                            while(path[i] != ')')
+                            {
+                                coord += path[i];
+                                i++;
+                            }
+                            string[] splitCoord = coord.Split(',');
+                            Vector2 vectorCoord = new Vector2(int.Parse(splitCoord[0]), int.Parse(splitCoord[1]));
+                            pathList.Add(vectorCoord);
+                        }
+                    }
+                    paths.Add(pathList);
+                }
+                
+                for(int i = 0; i < paths.Count; i++)
+                {
+                    GlobalData.harvesters[i].path = paths[i];   
+                }
+            } else if (message.type == "truck_python")
+            {
+                string[] lines = message.data.Split('\n');
+                Debug.Log(lines[0]);
+                Debug.Log(lines[1]);
+                Debug.Log(lines[2]);
             }
             
         };
         
-
         ws.Connect();
     }
+    
+    void PrintListOfVector2(List<Vector2> list)
+    {
+        foreach (Vector2 coord in list)
+        {
+            Debug.Log(coord);
+        }
+    }
+    
+    void PrintListOfListOfVector2(List<List<Vector2>> list)
+    {
+        foreach (List<Vector2> path in list)
+        {
+            foreach (Vector2 coord in path)
+            {
+                Debug.Log(coord);
+            }
+        }
+    }
+    
     
     void Update()
     {
@@ -102,6 +168,25 @@ public class WS_Client : MonoBehaviour
         {
             ws.Send("Hello");
         }
+    }
+    
+    string ListOfVector2ToJson(List<Vector2> list)
+    {
+        StringBuilder jsonBuilder = new StringBuilder("[");
+        
+        for (int i = 0; i < list.Count; i++)
+        {
+            jsonBuilder.Append("[" + list[i].x + "," + list[i].y + "]");
+            
+            if (i < list.Count - 1)
+            {
+                jsonBuilder.Append(",");
+            }
+        }
+        
+        jsonBuilder.Append("]");
+        
+        return jsonBuilder.ToString();
     }
     
     string MatrixToJson(int[,] matrix)
@@ -237,20 +322,24 @@ public class WS_Client : MonoBehaviour
 
     public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
+        
+        
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
         
         // Create the trucks initial positions matrix
-        int[,] truckInitialPosMatrix = new int[GlobalData.numTrucks, 2];
+        List<Vector2> truckInitialPosMatrix = new List<Vector2>();
         int[] initialPos; 
         for (int i = 0; i < GlobalData.numTrucks; i++)
         {
+            if (!GlobalData.trucks[i].isAviable)
+                continue;
+            
             initialPos = Common.FixTruckPositions(GlobalData.trucks[i].currentRow, GlobalData.trucks[i].currentCol);
-            truckInitialPosMatrix[i, 0] = initialPos[0];
-            truckInitialPosMatrix[i, 1] = initialPos[1];
+            truckInitialPosMatrix.Add(new Vector2(initialPos[0], initialPos[1]));
         }
         
-        string truckInitialPos = MatrixToJson(truckInitialPosMatrix); 
+        string truckInitialPos = ListOfVector2ToJson(truckInitialPosMatrix); 
         
         var message = new Msg_HarvesterUnloadRequest
         {
@@ -260,11 +349,11 @@ public class WS_Client : MonoBehaviour
             finalPos = finalPosition,
             trucksInitialPos = truckInitialPos
         };
-
         
         var jsonMessage = JsonUtility.ToJson(message);
-        
+
         Debug.Log(jsonMessage); 
+        
         ws.Send(jsonMessage); 
     }
 

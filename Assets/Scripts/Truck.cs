@@ -34,6 +34,7 @@ public class Truck : MonoBehaviour
     private int grainCapacity = 15; 
     private int grainLoad = 0;
     
+    public bool isAviable = true;
     void Start()
     {
     }

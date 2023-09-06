@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 
 public class Harvester : MonoBehaviour
@@ -21,23 +22,12 @@ public class Harvester : MonoBehaviour
     public int currentRow; 
     public int currentCol;
 
-    public Vector2[] path;
-        
-    // {
-    //     new Vector2(0,0),
-    //     new Vector2(0,1), 
-    //     new Vector2(0,2),
-    //     new Vector2(0,3),
-    //     new Vector2(1, 3),
-    //     new Vector2(1,2), 
-    //     new Vector2(1,1),
-    //     new Vector2(1,0),
-    // };
+    public List<Vector2> path;
 
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 15; 
+    private int grainCapacity = 5; 
     public int grainLoad = 0;
     
 
@@ -59,18 +49,18 @@ public class Harvester : MonoBehaviour
         harvestParticles = GetComponentInChildren<ParticleSystem>();
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
-
-        path = new Vector2[5];
-        CreateFakePath(); 
+        
     }
 
 
     void Update()
     {
-        if (path.Length == 0)
+        if (path.Count == 0)
         {
             return;
         }
+        
+        
         if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
         {
             return; 
@@ -86,39 +76,11 @@ public class Harvester : MonoBehaviour
         }
         
     }
-
-    void CreateFakePath()
-    {
-        if (currentRow == -1) // if starting on the bottom
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                path[i] = new Vector2(i, currentCol); 
-            }
-        } else if (currentRow == GlobalData.fieldRows) // if starting on the top 
-        {
-            for(int i = 0; i < 5; i++) 
-            {
-                path[i] = new Vector2(GlobalData.fieldRows - i - 1, currentCol); 
-            }
-        } else if (currentCol == -1) // if starting on the left
-        {
-            for(int i = 0; i < 5; i++) 
-            {
-                path[i] = new Vector2(currentRow, i); 
-            }
-        } else if (currentCol == GlobalData.fieldCols) // if starting on the right
-        {
-            for(int i = 0; i < 5; i++) 
-            {
-                path[i] = new Vector2(currentRow, GlobalData.fieldCols - i - 1); 
-            }
-        }
-    }
+    
 
     void GetMovement()
     { 
-        if(path.Length == 0)
+        if(path.Count == 0)
         {
             finishedPath = true;
             return; 
@@ -144,7 +106,9 @@ public class Harvester : MonoBehaviour
             HarvestDown(); 
         }
         
-        path = path[1..]; // Remove the first element of the array
+        
+        // Remove the first element of the array
+        path.RemoveAt(0);
     }
     
     
