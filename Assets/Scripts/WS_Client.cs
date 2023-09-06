@@ -4,11 +4,14 @@ using Newtonsoft.Json;
 using System.Text; 
 using System.Text.Json;
 using System.Collections.Generic; // Add this using directive
-
-
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 public class WS_Client : MonoBehaviour
 {
+        public string jsonString; // Assign the JSON string received from Python
+
+
     public WebSocket ws;
     FieldController fieldController;
     public Harvester harvester; 
@@ -64,14 +67,13 @@ public class WS_Client : MonoBehaviour
             else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
 
-            } else if (message.type == "python_harvester")if (message.type == "python_harvester"){
-                Debug.Log("AQUI RECIBE EL MENSAJE" + message.data);
+            } else if (message.type == "python_harvester") {
+                    // Vector2[] path = ParsePath(message.data);
+                    Debug.Log("AQUI: " + message.data);
+                    // Debug.Log("Path" + path);
 
             }
-            else
-            {
-                Debug.Log("Mensaje recibido: " + message.data); 
-            }  
+            
         };
         
 
@@ -252,6 +254,23 @@ public class WS_Client : MonoBehaviour
         
         Debug.Log(jsonMessage); 
         ws.Send(jsonMessage); 
+    }
+
+    public static Vector2[] ParsePath(string pathString)
+    {
+        List<Vector2> path = new List<Vector2>();
+        // Define a regular expression pattern to match (x, y) pairs
+        string pattern = @"\((-?\d+),\s*(-?\d+)\)";
+        MatchCollection matches = Regex.Matches(pathString, pattern);
+
+        foreach (Match match in matches)
+        {
+            int x = int.Parse(match.Groups[1].Value);
+            int y = int.Parse(match.Groups[2].Value);
+            path.Add(new Vector2(x, y));
+        }
+
+        return path.ToArray();
     }
 
 
