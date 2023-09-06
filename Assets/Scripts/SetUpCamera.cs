@@ -3,11 +3,7 @@ using UnityEngine;
 public class SetUpCamera : MonoBehaviour
 {
     public Transform fieldTransform; // Reference to the FieldController's transform
-
-    private void Start()
-    {
-        PositionCamera();
-    }
+    
 
 
     public void PositionCamera(){
@@ -43,5 +39,10 @@ public class SetUpCamera : MonoBehaviour
 
         // Rotate the camera to look down at the field
         transform.rotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
+    }
+    
+    private void Start()
+    {
+        PositionCamera();
     }
 }

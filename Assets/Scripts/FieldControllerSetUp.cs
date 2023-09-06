@@ -18,9 +18,7 @@ public class FieldControllerSetUp : MonoBehaviour
         UpdateParentPosition();
         // wsClient = FindObjectOfType<WS_Client>();
 
-        cameraScript = camera.GameObject
-
-        
+        cameraScript = camera.GetComponent<SetUpCamera>();
     }
 
     void Update()
@@ -28,18 +26,22 @@ public class FieldControllerSetUp : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             AddColumn();
+            cameraScript.PositionCamera();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             RemoveColumn();
+            cameraScript.PositionCamera();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             AddRow();
+            cameraScript.PositionCamera();
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             RemoveRow();
+            cameraScript.PositionCamera();
         }
     }
 
