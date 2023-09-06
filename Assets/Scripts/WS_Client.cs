@@ -11,12 +11,19 @@ public class WS_Client : MonoBehaviour
 {
     public WebSocket ws;
     FieldController fieldController;
+    public Harvester harvester; 
 
     [System.Serializable]
     private class FieldMatrixMessage
     {
         public string type;
         public int[,] data;
+    }
+
+    [System.Serializable]
+    private class PythonResult
+    {
+        public int[] path;
     }
 
     void Awake()
@@ -43,16 +50,33 @@ public class WS_Client : MonoBehaviour
                 getFieldDimensions(message.data);
                 Debug.Log(GlobalData.fieldCols.ToString() + GlobalData.fieldRows.ToString());
 
-            } else if (message.type == "starting_harvester_data")
-            {
+            } else if (message.type == "config_harvester_number" ){
+                Debug.Log(message);
+                GlobalData.numTrucks = int.Parse(message.data);
+
+            }else if(message.type == "config_field-density"){
+                Debug.Log(message.data);
+
+            }
+            else if(message.type == "config_gas_capacity"){
+                harvester.fuel = int.Parse(message.data);
+            }
+            else if (message.type == "starting_harvester_data"){
                 // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
             }
             else
             {
                 Debug.Log("Mensaje recibido: " + message.data); 
             }
+
+            //----- AQUI RECIBE LOS PATHS ----------- 
+            if (message.type == "python_harvester")
+            {
+                Debug.Log(message.data);
+            }
         };
         
+
         ws.Connect();
     }
     
@@ -145,6 +169,18 @@ public class WS_Client : MonoBehaviour
 
         var jsonMessage = JsonUtility.ToJson(message); 
 
+        ws.Send(jsonMessage); 
+    }
+
+    public void SendCapacidad(int capacidad)
+    {
+        var message = new Message
+        {
+            type = "harvester_capacity",
+            data = capacidad.ToString()
+        };
+
+        var jsonMessage = JsonUtility.ToJson(message); 
         ws.Send(jsonMessage); 
     }
 

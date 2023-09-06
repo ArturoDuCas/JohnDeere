@@ -13,7 +13,7 @@ public class Harvester : MonoBehaviour
     private float movementSpeed = 2.0f;
     private float actualSpeed; 
 
-    private float fuel = 1000; 
+    public float fuel = 1000; //Se asigna en WS_Client 
     private float fuelConsumption = 20;
     
 
@@ -38,7 +38,7 @@ public class Harvester : MonoBehaviour
     public bool finishedPath = false;
 
     private int grainCapacity = 15; 
-    private int grainLoad = 0;
+    public int grainLoad = 0;
     
 
 
@@ -296,7 +296,7 @@ public class Harvester : MonoBehaviour
         
         fuel -= fuelConsumption;
         grainLoad += GlobalData.grainsPerUnit;
-        
+        wsClient.SendCapacidad(grainLoad);
         
         isMoving = false; 
         harvestParticles.Stop();
