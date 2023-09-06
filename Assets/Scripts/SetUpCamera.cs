@@ -6,6 +6,11 @@ public class SetUpCamera : MonoBehaviour
 
     private void Start()
     {
+        PositionCamera();
+    }
+
+
+    public void PositionCamera(){
         if (fieldTransform == null)
         {
             Debug.LogError("FieldTransform is not assigned to the camera controller!");

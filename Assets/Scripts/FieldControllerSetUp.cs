@@ -1,10 +1,14 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FieldControllerSetUp : MonoBehaviour
 {
     public Transform fieldTransform;
-    public GameObject unitPrefab;  
+    public GameObject unitPrefab; 
+
+    public GameObject camera;
+    private SetUpCamera cameraScript; 
 
     private WS_Client wsClient;
 
@@ -13,6 +17,9 @@ public class FieldControllerSetUp : MonoBehaviour
         CreateField();
         UpdateParentPosition();
         // wsClient = FindObjectOfType<WS_Client>();
+
+        cameraScript = camera.GameObject
+
         
     }
 
@@ -21,6 +28,18 @@ public class FieldControllerSetUp : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             AddColumn();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            RemoveColumn();
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            AddRow();
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            RemoveRow();
         }
     }
 
@@ -86,6 +105,62 @@ void AddColumn()
         newUnit.name = $"Unit({row}, {newCol})";
 
         Debug.Log($"Created Unit({row}, {newCol})");
+    }
+}
+
+
+void RemoveColumn()
+{
+    if (GlobalData.fieldCols > 1)
+    {
+        int lastCol = GlobalData.fieldCols - 1;
+
+        for (int row = 0; row < GlobalData.fieldRows; row++)
+        {
+            GameObject unitToRemove = GameObject.Find($"Unit({row}, {lastCol})");
+            if (unitToRemove != null)
+            {
+                Destroy(unitToRemove);
+            }
+        }
+
+        GlobalData.fieldCols--;
+    }
+}
+
+void AddRow()
+{
+    int newRow = GlobalData.fieldRows;
+    GlobalData.fieldRows++;
+
+    for (int col = 0; col < GlobalData.fieldCols; col++)
+    {
+        GameObject newUnit = Instantiate(unitPrefab, transform);
+        newUnit.transform.position = new Vector3(col * GlobalData.unit_xSize + 3, 0, newRow * GlobalData.unit_zSize + 3);
+        newUnit.name = $"Unit({newRow}, {col})";
+    }
+}
+
+void RemoveRow()
+{
+    
+    if (GlobalData.fieldRows > 1)
+    {
+        //num de ultima fila
+        int lastRow = GlobalData.fieldRows - 1;
+
+        //entre las column
+        for (int col = 0; col < GlobalData.fieldCols; col++)
+        {
+            //buscar el Unit para quitar
+            GameObject unitToRemove = GameObject.Find($"Unit({lastRow}, {col})");
+            if (unitToRemove != null)
+            {
+                Destroy(unitToRemove);
+            }
+        }
+
+        GlobalData.fieldRows--;
     }
 }
 
