@@ -3,6 +3,19 @@ using System.Collections.Generic;
 
 public static class Common 
 {
+    public static bool isAnyTruckAvailable()
+    {
+        for(int i = 0; i < GlobalData.numTrucks; i++)
+        {
+            if(GlobalData.trucks[i].isAviable)
+            {
+                return true;
+            }
+        }
+        return false; 
+    }
+    
+    
     public static bool isGoingToCrash(Vector2 nextPos)
     {
         int numTrucks = GlobalData.numTrucks;

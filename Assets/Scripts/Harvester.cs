@@ -28,7 +28,7 @@ public class Harvester : MonoBehaviour
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    private int grainCapacity = 20; 
+    public int grainCapacity = 20; 
     public int grainLoad = 0;
 
     public bool isWaitingForTruck = false; 
@@ -48,6 +48,8 @@ public class Harvester : MonoBehaviour
     private ParticleSystem unloadParticles;
     public ParticleSystem harvestParticlesPrefab;
     private ParticleSystem harvestParticles;
+    
+    public bool isBeingHelped = false;
     
 
 
@@ -135,7 +137,15 @@ public class Harvester : MonoBehaviour
         {
             if (!isMoving) // If the harvester is not moving
             {
-                GetMovement(); 
+                // if (Common.isGoingToCrash(path[0]))
+                // {
+                //     AddRightUpLeftPath(); 
+                // }
+                // else
+                // {
+                    GetMovement(); 
+                    
+                // }
             }
         }
         // else{
@@ -171,7 +181,7 @@ public class Harvester : MonoBehaviour
         
     }
 
-    // void HelpHarvester(List<Vector2> new_path){        
+    // void HelpHarvester(List<Vector2> new_path){
     //     new_path.Reverse(); 
 
     //     if(new_path.Count == 0)
@@ -212,6 +222,42 @@ public class Harvester : MonoBehaviour
     //     path.RemoveAt(0);
     // }
     
+
+    void AddRightUpLeftPath()
+    {
+        // delete the first element of the path
+        path.RemoveAt(0);
+        Vector2 right = new Vector2(); ;
+        Vector2 up = new Vector2(); ; 
+        Vector2 left = new Vector2(); ;
+        
+        if (transform.rotation.y == 180f) // looking down
+        {
+            right = new Vector2(currentRow, currentCol -1);
+            up = right + new Vector2(-1,0f); 
+            left = up + new Vector2(0f, +1f);
+        } else if (transform.rotation.y == 270f || transform.rotation.y == -90f) // looking left
+        {
+            right = new Vector2(currentRow + 1, currentCol);
+            up = right + new Vector2(-1,0f); 
+            left = up + new Vector2(0f, -1f);
+        } else if(transform.rotation.y == 0f) // looking up
+        {
+            right = new Vector2(currentRow, currentCol + 1);
+            up = right + new Vector2(1,0f); 
+            left = up + new Vector2(0f, -1f);
+        } else if(transform.rotation.y == 90f) // looking right
+        {
+            right = new Vector2(currentRow - 1, currentCol);
+            up = right + new Vector2(1,0f); 
+            left = up + new Vector2(0f, +1f);
+        }
+        
+        path.Insert(0, left);
+        path.Insert(0, up);
+        path.Insert(0, right);
+
+    }
 
     void GetMovement()
     { 
@@ -400,6 +446,7 @@ public class Harvester : MonoBehaviour
         GlobalData.trucks[truckId].grainLoad += grainLoad; 
         
         grainLoad = 0;
+        isBeingHelped = false; 
         
         
         // Si se lleno el truck

@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df10e521-ff49-429e-86b2-6a301db64f38" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SceneManagerScript.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SceneManagerScript.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Common.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Common.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FieldController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FieldController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Harvester.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Harvester.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Truck.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Truck.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WS_Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/WS_Client.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +47,7 @@
       <updated>1693790177042</updated>
       <workItem from="1693790191405" duration="1328000" />
       <workItem from="1693885411318" duration="649000" />
-      <workItem from="1693998954152" duration="4946000" />
+      <workItem from="1693998954152" duration="5609000" />
     </task>
     <servers />
   </component>

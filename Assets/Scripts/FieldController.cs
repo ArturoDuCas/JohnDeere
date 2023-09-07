@@ -24,7 +24,24 @@ public class FieldController : MonoBehaviour
         InstantiateSilos(); 
         OnDensityChange(); 
         InstantiateHarvestersAndTrucks();
-
+        
+        InvokeRepeating("MakeHarvestersAskForHelp", 0f, 5f);
+    }
+    
+    void MakeHarvestersAskForHelp()
+    {
+        if (Common.isAnyTruckAvailable())
+        {
+            for(int i = 0; i < GlobalData.harvesters.Length; i++)
+            {
+                Harvester actual = GlobalData.harvesters[i];
+                if(!actual.isWaitingForTruck && actual.path.Count > 0 && actual.grainLoad >= actual.grainCapacity && !actual.isBeingHelped)
+                {
+                    Debug.Log("Harvester " + actual.id + " intenta solucionar el bugazo"); 
+                    actual.isWaitingForTruck = true;
+                }
+            }
+        }
     }
 
     void InstantiateSilos()

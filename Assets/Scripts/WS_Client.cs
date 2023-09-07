@@ -186,6 +186,9 @@ public class WS_Client : MonoBehaviour
                     GlobalData.trucks[truckWithMinRoute].targetHarvester = harvesterId;
                     List<Vector2> path = ConvertStringToVector2List(truckOptionsPaths[truckWithMinRoute]);
                     GlobalData.trucks[truckWithMinRoute].path = path;
+                    
+                    
+                    GlobalData.harvesters[harvesterId].isBeingHelped = true;
                 }
                 else 
                 {
@@ -538,7 +541,6 @@ for (int i = 0; i < list.Count; i++)
 
     public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
-        Debug.Log("Harvester " + id + " is full at " + finalRow + ", " + finalCol);
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
         
@@ -570,8 +572,7 @@ for (int i = 0; i < list.Count; i++)
         };
         
         var jsonMessage = JsonUtility.ToJson(message);
-
-        Debug.Log(jsonMessage); 
+        
         
         ws.Send(jsonMessage); 
     }

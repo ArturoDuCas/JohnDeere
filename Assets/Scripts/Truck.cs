@@ -37,6 +37,7 @@ public class Truck : MonoBehaviour
     {
         grainCapacity = 20; // TODO: Eliminar esto
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
+        
     }
 
     void Update()
@@ -58,7 +59,14 @@ public class Truck : MonoBehaviour
             
             if (!isMoving) // if the truck is not moving
             {
-                GetFixedMovement(); 
+                if (Common.isGoingToCrash(path[0]))
+                {
+                    // AddRightUpLeftToPath(1);
+                }
+                else
+                {
+                    GetFixedMovement(); 
+                }
             }
             
             
@@ -77,11 +85,58 @@ public class Truck : MonoBehaviour
         
             if (!isMoving) // if the truck is not moving
             {
-                GetMovement(); 
+                // if (Common.isGoingToCrash(path[0]))
+                // {
+                //     AddRightUpLeftToPath(0);
+                //     return; 
+                // }
+                // else
+                // {
+                    GetMovement(); 
+                // }
             }
 
         }
         
+    }
+
+    void AddRightUpLeftToPath(int correction)
+    {
+        // delete the first element of the path
+        path.RemoveAt(0);
+        Vector2 right = new Vector2(); ;
+        Vector2 up = new Vector2(); ; 
+        Vector2 left = new Vector2(); ;
+        
+        if (transform.rotation.y == 0f) // looking down
+        {
+            right = new Vector2(currentRow, currentCol -1);
+            up = right + new Vector2(-1,0f); 
+            left = up + new Vector2(0f, +1f);
+        } else if (transform.rotation.y == 90f) // looking left
+        {
+            right = new Vector2(currentRow + 1, currentCol);
+            up = right + new Vector2(-1,0f); 
+            left = up + new Vector2(0f, -1f);
+        } else if(transform.rotation.y == 180f) // looking up
+        {
+            right = new Vector2(currentRow, currentCol + 1);
+            up = right + new Vector2(1,0f); 
+            left = up + new Vector2(0f, -1f);
+        } else if(transform.rotation.y == 270f || transform.rotation.y == -90f) // looking right
+        {
+            right = new Vector2(currentRow - 1, currentCol);
+            up = right + new Vector2(1,0f); 
+            left = up + new Vector2(0f, +1f);
+        }
+        
+        left += new Vector2(correction, correction);
+        up += new Vector2(correction, correction);
+        right += new Vector2(correction, correction);
+        
+        path.Insert(0, left);
+        path.Insert(0, up);
+        path.Insert(0, right);
     }
 
     void UnloadGrain()
