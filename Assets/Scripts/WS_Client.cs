@@ -31,7 +31,7 @@ public class WS_Client : MonoBehaviour
 
     void Awake()
     {
-        ws = new WebSocket("ws://localhost:8082");
+        ws = new WebSocket("ws://localhost:8080");
         fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
@@ -540,8 +540,6 @@ for (int i = 0; i < list.Count; i++)
 
     public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
-        
-        
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
         

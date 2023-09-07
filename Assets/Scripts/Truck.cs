@@ -24,7 +24,7 @@ public class Truck : MonoBehaviour
     public bool isGoingToFinish = false; 
         
         
-    public int grainCapacity = 40; 
+    public  int grainCapacity = 20; 
     public int grainLoad = 0;
     
     public bool isAviable = true;
