@@ -32,6 +32,8 @@ public class Harvester : MonoBehaviour
     public int grainLoad = 0;
 
     public bool isWaitingForTruck = false; 
+
+    public bool ayudando_harvester = false; 
     
 
 
@@ -75,6 +77,7 @@ public class Harvester : MonoBehaviour
 
     void Update()
     {
+
         if (fuel <= 0) // if fuel is over, stop moving
             return;
         
@@ -94,6 +97,30 @@ public class Harvester : MonoBehaviour
         
         if (path.Count == 0)
         {
+            // ayudando_harvester = true; 
+
+            List<int> num_harv = new List<int>();
+
+            Debug.Log("Entra al otro elsee ------------- ");
+
+            for(int i = 0; i < GlobalData.harvesters.Length; i++){
+                Debug.Log("ENTRA AL FOR");
+
+                if( !GlobalData.harvesters[i].finishedPath ){
+                    num_harv.Add(GlobalData.harvesters[i].id);
+                }
+            }
+
+            if(num_harv.Count >= 1){
+            
+                // finishedPath = false; 
+                // HelpHarvester(GlobalData.harvesters[num_harv[0]].path);
+                
+                List<Vector2> otra_path = GlobalData.harvesters[num_harv[0]].path;
+                otra_path.Reverse(); 
+                path = otra_path;
+            
+            }
             return;
         }
         
@@ -111,8 +138,79 @@ public class Harvester : MonoBehaviour
                 GetMovement(); 
             }
         }
+        // else{
+
+        //     List<int> num_harv = new List<int>();
+
+        //     Debug.Log("Entra al otro elsee ------------- ");
+
+        //     for(int i = 0; i < GlobalData.harvesters.Length; i++){
+        //         Debug.Log("ENTRA AL FOR");
+
+        //         if( !GlobalData.harvesters[i].finishedPath ){
+        //             num_harv.Add(GlobalData.harvesters[i].id);
+        //         }
+        //     }
+
+        //     if(num_harv.Count >= 1){
+        //         if(!isMoving){
+
+        //             HelpHarvester(GlobalData.harvesters[num_harv[0]].path);
+        //         }
+        //     }
+
+        //     // if(id == 0){
+
+        //     //     HelpHarvester(GlobalData.harvesters[1].path); 
+        //     // }else{
+        //     //     HelpHarvester(GlobalData.harvesters[0].path); 
+
+        //     // }
+        // }
+
         
     }
+
+    // void HelpHarvester(List<Vector2> new_path){        
+    //     new_path.Reverse(); 
+
+    //     if(new_path.Count == 0)
+    //     {
+    //         // finishedPath = true;
+    //         // ayudando_harvester = false; 
+    //         return; 
+    //     }
+        
+    //     lastPos = new Vector2(currentRow, currentCol); 
+        
+    //     isMoving = true;
+    //     if(GlobalData.fieldMatrix[(int) new_path[0].x, (int) new_path[0].y] == 1) // if the unit has corn
+    //     {
+    //         harvestParticles.Play();
+    //     }
+        
+    //     if (currentCol < new_path[0].y) // Se mueve a la derecha
+    //     {
+    //         HarvestRight(); 
+    //     } else if (currentCol > new_path[0].y) // Se mueve a la izquierda
+    //     {
+    //         HarvestLeft(); 
+    //     } else if (currentRow < new_path[0].x) // Se mueve hacia arriba
+    //     {
+    //         HarvestUp(); 
+    //     } else if (currentRow > new_path[0].x) // Se mueve hacia abajo
+    //     {
+    //         HarvestDown(); 
+    //     }
+    //     else
+    //     {
+    //         isMoving = false; 
+    //     }
+        
+        
+    //     // Remove the first element of the array
+    //     path.RemoveAt(0);
+    // }
     
 
     void GetMovement()
@@ -120,6 +218,7 @@ public class Harvester : MonoBehaviour
         if(path.Count == 0)
         {
             finishedPath = true;
+            ayudando_harvester = true; 
             return; 
         }
         
