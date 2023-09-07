@@ -30,7 +30,7 @@ public class WS_Client : MonoBehaviour
 
     void Awake()
     {
-        ws = new WebSocket("ws://localhost:8080");
+        ws = new WebSocket("ws://localhost:8081");
         fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
