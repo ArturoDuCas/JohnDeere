@@ -48,7 +48,6 @@ public class Truck : MonoBehaviour
         
         if (isReturning) // Si esta llendo al almacen
         {
-            Debug.Log(path.Count); 
             if(path.Count == 0) // Si ya llego al almacen
             {
                 isReturning = false;
@@ -70,7 +69,7 @@ public class Truck : MonoBehaviour
             {
                 if (isGoingToFinish) {
                     UnloadGrain();
-                    isGoingToFinish = false;
+                    isGoingToFinish = false; // para llamar una vez a la funcion de descargar maiz
                 }
                 return;
             }
@@ -87,9 +86,7 @@ public class Truck : MonoBehaviour
 
     void UnloadGrain()
     {
-        
         GlobalData.harvesters[targetHarvester].UnloadGrain(id);
-        isAviable = true;
     }
     
     void GetFixedMovement()

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 public static class GlobalData
 {
     // Field data
-    public static int fieldCols = 6 ; //Se asigna en WS_Client
-
-    public static int fieldRows = 6; //Se asigna en WS_Client
+    public static int fieldCols = 10 ; //Se asigna en WS_Client
+    public static int fieldRows = 10; //Se asigna en WS_Client
     public static int[,] fieldMatrix; // 0 = harvested, 1 = not-harvested, 2 = harvesting
 
     
@@ -24,13 +23,13 @@ public static class GlobalData
 
     
     // Harvesters data
-    public static int numHarvesters = 2;
+    public static int numHarvesters = 3;
     public static int[,] harvestersStartingPoints;
 
     public static Harvester[] harvesters;
     
     // Truck data
-    public static int numTrucks = 2; //Se asigna en WS_Client
+    public static int numTrucks = 3; //Se asigna en WS_Client
     public static Truck[] trucks;
     
     

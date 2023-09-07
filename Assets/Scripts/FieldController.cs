@@ -126,9 +126,6 @@ public class FieldController : MonoBehaviour
         int numOfUnitsThatMustHave = numOfTotalUnits * GlobalData.cornDensity / 100;
         
         
-        // Debug.Log("Number of units that must have: " + numOfUnitsThatMustHave);
-        // Debug.Log("Number of not harvested units: " + numOfNotHarvestedUnits);
-        // Debug.Log("Number of harvested units: " + numOfHarvestedUnits);
         if (numOfUnitsThatMustHave > numOfNotHarvestedUnits) // if we need to add corns 
         {
             int numOfCornsToAdd = numOfUnitsThatMustHave - numOfNotHarvestedUnits;
@@ -310,29 +307,27 @@ public class FieldController : MonoBehaviour
         transform.position += new Vector3(GlobalData.unit_xSize / 2, 0, GlobalData.unit_zSize / 2); 
     }
 
+    void UpdateActualDensity()
+    {
+        int numOfNotHarvestedUnits = Common.GetNumberOfNotHarvestedUnits(); 
+        int numOfHarvestedUnits = GlobalData.fieldRows * GlobalData.fieldCols - numOfNotHarvestedUnits;
+        int numOfTotalUnits = numOfHarvestedUnits + numOfNotHarvestedUnits;
+        
+        GlobalData.cornDensity =  numOfNotHarvestedUnits * 100  / numOfTotalUnits;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (GlobalData.cornDensity < 100)
-            {
-                GlobalData.cornDensity += 5; 
-            }
-            Common.DeleteAllHarvesterPaths();
-            OnDensityChange();
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
+            UpdateActualDensity(); 
             if (GlobalData.cornDensity > 0)
             {
                 GlobalData.cornDensity -= 5; 
             }
             Common.DeleteAllHarvesterPaths();
             OnDensityChange();
-        } else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Common.printMatrix(GlobalData.fieldMatrix);
         }
-
     }
 
 

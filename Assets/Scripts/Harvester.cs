@@ -30,6 +30,8 @@ public class Harvester : MonoBehaviour
 
     private int grainCapacity = 20; 
     public int grainLoad = 0;
+
+    public bool isWaitingForTruck = false; 
     
 
 
@@ -56,9 +58,39 @@ public class Harvester : MonoBehaviour
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
     }
 
+    bool verifyTruckAviability()
+    {
+        // returns true if at least one truck is aviable
+        for (int i = 0; i < GlobalData.numTrucks; i++)
+        {
+            if (GlobalData.trucks[i].isAviable)
+            {
+                return true; 
+            }
+        }
+        
+        return false;
+    }
+
 
     void Update()
     {
+        if (fuel <= 0) // if fuel is over, stop moving
+            return;
+        
+
+        
+        if(isWaitingForTruck)
+        {
+            if (verifyTruckAviability())
+            {
+                wsClient.SendHarvesterUnloadRequest((int)lastPos.x, (int)lastPos.y, id);
+                isWaitingForTruck = false; 
+            }
+            
+            return; 
+        }
+        
         
         if (path.Count == 0)
         {
@@ -66,7 +98,7 @@ public class Harvester : MonoBehaviour
         }
         
         
-        if(fuel <= 0 || grainCapacity <= grainLoad) // If the harvester has no fuel or is full
+        if(grainCapacity <= grainLoad) // If the harvester has no fuel or is full
         {
             return; 
         }
@@ -267,7 +299,6 @@ public class Harvester : MonoBehaviour
         
         Destroy(unloadParticles);
         GlobalData.trucks[id].grainLoad += grainLoad; 
-        GlobalData.trucks[id].isAviable = true;
         
         grainLoad = 0;
         
@@ -277,6 +308,10 @@ public class Harvester : MonoBehaviour
         {
             GlobalData.trucks[id].isAviable = false;
             GlobalData.trucks[id].GoToSilos();
+        }
+        else
+        {
+            GlobalData.trucks[id].isAviable = true;
         }
         
     }

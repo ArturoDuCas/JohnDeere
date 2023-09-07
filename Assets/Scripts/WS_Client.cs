@@ -77,10 +77,7 @@ public class WS_Client : MonoBehaviour
                 Debug.Log("config_harvester_speed" + message.data);
 
             }
-            else if (message.type == "starting_harvester_data"){
-                // fieldController.AssignRouteToHarvesters(message.data); // TODO: message este tipo Mensaje, ver como se va a mandar
-
-            } else if (message.type == "python_harvester")
+            else if (message.type == "python_harvester")
             {
                 // message.data = [(0, 0), (0, 1), (0, 2), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (3, 2), (3, 1), (3, 0), (4, 0), (4, 1), (4, 2), (5, 2), (5, 1), (5, 0)] [(0, 1), (0, 0), (1, 0), (1, 1), (1, 2), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (3, 1), (3, 2), (4, 2), (4, 1), (4, 0), (5, 0), (5, 1), (5, 2)]
                 List<List<Vector2>> paths = new List<List<Vector2>>();
@@ -195,22 +192,14 @@ public class WS_Client : MonoBehaviour
 
                 if (GlobalData.trucks[truckWithMinRoute].isAviable)
                 {
+                    GlobalData.trucks[truckWithMinRoute].isAviable = false;
                     GlobalData.trucks[truckWithMinRoute].targetHarvester = harvesterId;
                     List<Vector2> path = ConvertStringToVector2List(truckOptionsPaths[truckWithMinRoute]);
-
-                    if (GlobalData.trucks[truckWithMinRoute].isAviable)
-                    {
-                        GlobalData.trucks[truckWithMinRoute].isAviable = false;
-                        GlobalData.trucks[truckWithMinRoute].path = path;
-                    }
-                    else // TODO: Si no esta disponible, que el harvester pida otra ruta
-                    {
-                        
-                    }
+                    GlobalData.trucks[truckWithMinRoute].path = path;
                 }
-                else // TODO: Si no esta disponible, que el harvester pida otra ruta
+                else 
                 {
-                    Debug.Log("No hay ningun harvester disponible");
+                    GlobalData.harvesters[harvesterId].isWaitingForTruck = true;
                 }
                 
             } else if (message.type == "truck_to_silos")
@@ -534,6 +523,7 @@ for (int i = 0; i < list.Count; i++)
 
     public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
+        Debug.Log("Harvester " + id + " is full at " + finalRow + ", " + finalCol);
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
         
