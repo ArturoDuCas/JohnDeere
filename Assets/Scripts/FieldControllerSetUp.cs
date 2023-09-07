@@ -26,6 +26,8 @@ public class FieldControllerSetUp : MonoBehaviour
         
     }
 
+    
+
     void CreateGlobalMatrix()
     {
         // Create the matrix
@@ -69,6 +71,8 @@ public class FieldControllerSetUp : MonoBehaviour
         
        
     }
+
+    
 
 
 
