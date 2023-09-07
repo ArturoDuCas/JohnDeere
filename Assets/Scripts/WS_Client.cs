@@ -30,7 +30,7 @@ public class WS_Client : MonoBehaviour
 
     void Awake()
     {
-        ws = new WebSocket("ws://localhost:8082");
+        ws = new WebSocket("ws://localhost:8080");
         fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
@@ -80,48 +80,37 @@ public class WS_Client : MonoBehaviour
             }
             else if (message.type == "python_harvester")
             {
-                // message.data = [(0, 0), (0, 1), (0, 2), (1, 2), (1, 1), (1, 0), (2, 0), (2, 1), (2, 2), (3, 2), (3, 1), (3, 0), (4, 0), (4, 1), (4, 2), (5, 2), (5, 1), (5, 0)] [(0, 1), (0, 0), (1, 0), (1, 1), (1, 2), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (3, 0), (3, 1), (3, 2), (4, 2), (4, 1), (4, 0), (5, 0), (5, 1), (5, 2)]
-                List<List<Vector2>> paths = new List<List<Vector2>>();
+                // first line: harvester id
+                // second line: path
+                string[] lines = message.data.Split('\n');
+                int harvesterId = int.Parse(lines[0]);
                 
-                string[] splitPaths = message.data.Split(']');
-                List<string> correctSplitPaths = new List<string>();
-                for(int i = 0; i < splitPaths.Length; i++)
-                {
-                    if(splitPaths[i].Length > 3)
-                    {
-                        string path = splitPaths[i]; 
-                        path = path.Replace("[", "");
-                        path = path.Replace(" ", "");
-                        correctSplitPaths.Add(path);
-                    }
-                }
+                string path = lines[1];
+                path = path.Replace("[", "");
+                path = path.Replace(" ", "");
+                path = path.Replace("]", "");
                 
-                foreach(string path in correctSplitPaths)
+                List<Vector2> pathList = new List<Vector2>();
+                for(int i = 0; i < path.Length; i++)
                 {
-                    List<Vector2> pathList = new List<Vector2>();
-                    for(int i = 0; i < path.Length; i++)
+                    if(path[i] == '(')
                     {
-                        if(path[i] == '(')
+                        string coord = "";
+                        i++;
+                        while(path[i] != ')')
                         {
-                            string coord = "";
+                            coord += path[i];
                             i++;
-                            while(path[i] != ')')
-                            {
-                                coord += path[i];
-                                i++;
-                            }
-                            string[] splitCoord = coord.Split(',');
-                            Vector2 vectorCoord = new Vector2(int.Parse(splitCoord[0]), int.Parse(splitCoord[1]));
-                            pathList.Add(vectorCoord);
                         }
+                        string[] splitCoord = coord.Split(',');
+                        Vector2 vectorCoord = new Vector2(int.Parse(splitCoord[0]), int.Parse(splitCoord[1]));
+                        pathList.Add(vectorCoord);
                     }
-                    paths.Add(pathList);
                 }
                 
-                for(int i = 0; i < paths.Count; i++)
-                {
-                    GlobalData.harvesters[i].path = paths[i];   
-                }
+                GlobalData.harvesters[harvesterId].path = pathList;
+                
+
             } else if (message.type == "truck_python")
             {
                 // first line: harvester id
@@ -474,28 +463,53 @@ for (int i = 0; i < list.Count; i++)
 
     public void SendInitialHarvesterData()
     {
-        // fix the starting points matrix
-        int[,] harvesterStartingPos = new int[GlobalData.numHarvesters, 2];
-        int[] pos = new int[2]; 
-        for (int i = 0; i < GlobalData.numHarvesters; i++)
+        Msg_SendInitialHarvesterData message = new Msg_SendInitialHarvesterData(); 
+        if (GlobalData.numHarvesters == 1) // call the function for 1 harvester
         {
-            pos = Common.FixHarvesterPositions(GlobalData.harvesters[i].currentRow, GlobalData.harvesters[i].currentCol);
-            harvesterStartingPos[i, 0] = pos[0];
-            harvesterStartingPos[i, 1] = pos[1];
+            int[] startingPoint = Common.FixHarvesterPositions(GlobalData.harvesters[0].currentRow, GlobalData.harvesters[0].currentCol);
+            string startingPointsJson = "[" + startingPoint[0] + ", " + startingPoint[1] + "]";
+            string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
+            message = new Msg_SendInitialHarvesterData
+            {
+                type = "starting_harvester_data",
+                harvesterId = "0", 
+                startingPoints = startingPointsJson,
+                fieldMatrix = fieldMatrixJson
+            };
+            
+        }
+        else // si es con 2 harvesters
+        {
+            // fix the starting points matrix
+            int[,] harvesterStartingPos = new int[GlobalData.numHarvesters, 2];
+            int[] pos = new int[2];
+            for (int i = 0; i < GlobalData.numHarvesters; i++)
+            {
+                pos = Common.FixHarvesterPositions(GlobalData.harvesters[i].currentRow, GlobalData.harvesters[i].currentCol);
+                harvesterStartingPos[i, 0] = pos[0];
+                harvesterStartingPos[i, 1] = pos[1];
+            }
+
+            List<int[,]> matrixs = Common.DivideMatrix(GlobalData.fieldMatrix, harvesterStartingPos);  
+            for (int i = 0; i < GlobalData.numHarvesters; i++)
+            {
+                int[] startingPoint = Common.FixHarvesterPositions(GlobalData.harvesters[i].currentRow, GlobalData.harvesters[i].currentCol);
+                string startingPointsJson = "[" + startingPoint[0] + ", " + startingPoint[1] + "]";
+                string fieldMatrixJson = MatrixToJson(matrixs[i]);
+                message = new Msg_SendInitialHarvesterData
+                {
+                    type = "starting_harvester_data",
+                    harvesterId = i.ToString(), 
+                    startingPoints = startingPointsJson,
+                    fieldMatrix = fieldMatrixJson
+                };
+                
+                var jsonMessage = JsonUtility.ToJson(message);
+                ws.Send(jsonMessage); 
+            }
         }
         
-        string startingPointsJson = MatrixToJson(harvesterStartingPos);    
-        string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
-        var message = new Msg_SendInitialHarvesterData
-        {
-            type = "starting_harvester_data",
-            startingPoints = startingPointsJson,
-            fieldMatrix = fieldMatrixJson
-        };
         
-        var jsonMessage = JsonUtility.ToJson(message);
-        
-        ws.Send(jsonMessage); 
     }
 
     public void SendTruckToSilos(int row, int col, int id)

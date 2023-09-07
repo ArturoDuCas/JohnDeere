@@ -26,12 +26,14 @@ public class WsRequester : MonoBehaviour
 
         if (!isDataSent)
         {
+            // if(GlobalData.numHarvesters == 2){
+            //     // string startingPointsJson = MatrixToJson(harvesterStartingPos);  
+            //     int[,,] new_matrix = Common.DivideMatrix(GlobalData.fieldMatrix, harvesterStartingPos);
+            // }
             wsClient.SendInitialHarvesterData();
             isDataSent = true;
         }
-        // else
-        // {
-        //     //TODO: Destroy myself
-        // }
     }
 }
+
+

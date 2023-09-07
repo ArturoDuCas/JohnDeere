@@ -52,7 +52,7 @@ public class Harvester : MonoBehaviour
     void Start()
     {
         harvestParticles = Instantiate(harvestParticlesPrefab, transform); 
-        
+        isWaitingForTruck = false;
         
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
@@ -84,8 +84,8 @@ public class Harvester : MonoBehaviour
         {
             if (verifyTruckAviability())
             {
-                wsClient.SendHarvesterUnloadRequest((int)lastPos.x, (int)lastPos.y, id);
                 isWaitingForTruck = false; 
+                wsClient.SendHarvesterUnloadRequest((int)lastPos.x, (int)lastPos.y, id);
             }
             
             return; 
@@ -98,7 +98,7 @@ public class Harvester : MonoBehaviour
         }
         
         
-        if(grainCapacity <= grainLoad) // If the harvester has no fuel or is full
+        if(grainCapacity <= grainLoad) // If the harvester  is full
         {
             return; 
         }
@@ -283,12 +283,12 @@ public class Harvester : MonoBehaviour
         return json;
     }
 
-    public void UnloadGrain(int id)
+    public void UnloadGrain(int truckId)
     {
-        StartCoroutine(UnloadProcessCoroutine(id)); 
+        StartCoroutine(UnloadProcessCoroutine(truckId)); 
     }
 
-    IEnumerator UnloadProcessCoroutine(int id)
+    IEnumerator UnloadProcessCoroutine(int truckId)
     {
         yield return new WaitForSeconds(.5f); 
         
@@ -298,20 +298,21 @@ public class Harvester : MonoBehaviour
         yield return new WaitForSeconds(5f);
         
         Destroy(unloadParticles);
-        GlobalData.trucks[id].grainLoad += grainLoad; 
+        GlobalData.trucks[truckId].grainLoad += grainLoad; 
         
         grainLoad = 0;
         
         
         // Si se lleno el truck
-        if (GlobalData.trucks[id].grainLoad >= GlobalData.trucks[id].grainCapacity)
+        if (GlobalData.trucks[truckId].grainLoad >= GlobalData.trucks[id].grainCapacity)
         {
-            GlobalData.trucks[id].isAviable = false;
-            GlobalData.trucks[id].GoToSilos();
+            GlobalData.trucks[truckId].isAviable = false;
+            GlobalData.trucks[truckId].GoToSilos();
         }
         else
         {
-            GlobalData.trucks[id].isAviable = true;
+            GlobalData.trucks[truckId].isAviable = true;
+            // TODO: LLamar a la funcion de brindar soporte
         }
         
     }
