@@ -30,7 +30,7 @@ public class WS_Client : MonoBehaviour
 
     void Awake()
     {
-        ws = new WebSocket("ws://localhost:8081");
+        ws = new WebSocket("ws://localhost:8082");
         fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
@@ -64,6 +64,7 @@ public class WS_Client : MonoBehaviour
                 
                 Debug.Log("config_harvester_number" + message.data);
                 GlobalData.numTrucks = int.Parse(message.data);
+                GlobalData.numHarvesters = int.Parse(message.data);
 
             }else if(message.type == "config_field-density"){
                 Debug.Log("config_field"+message.data);
