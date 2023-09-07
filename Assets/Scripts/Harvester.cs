@@ -59,6 +59,7 @@ public class Harvester : MonoBehaviour
 
     void Update()
     {
+        
         if (path.Count == 0)
         {
             return;
@@ -110,6 +111,10 @@ public class Harvester : MonoBehaviour
         } else if (currentRow > path[0].x) // Se mueve hacia abajo
         {
             HarvestDown(); 
+        }
+        else
+        {
+            isMoving = false; 
         }
         
         
@@ -266,6 +271,14 @@ public class Harvester : MonoBehaviour
         
         grainLoad = 0;
         
+        
+        // Si se lleno el truck
+        if (GlobalData.trucks[id].grainLoad >= GlobalData.trucks[id].grainCapacity)
+        {
+            GlobalData.trucks[id].isAviable = false;
+            GlobalData.trucks[id].GoToSilos();
+        }
+        
     }
     
     
@@ -273,6 +286,12 @@ public class Harvester : MonoBehaviour
     
     IEnumerator HarvestCoroutine(Vector3 finishPosition)
     {
+        bool hadCorn; // Verify if it is a unit that had corn 
+        if(GlobalData.fieldMatrix[currentRow, currentCol] == 1)
+            hadCorn = true; 
+        else
+            hadCorn = false; 
+        
         GlobalData.fieldMatrix[currentRow, currentCol] = 2;
         
         float distance = Vector3.Distance(transform.position, finishPosition);
@@ -289,7 +308,11 @@ public class Harvester : MonoBehaviour
         }
         
         fuel -= fuelConsumption;
-        grainLoad += GlobalData.grainsPerUnit;
+
+        if (hadCorn) // if it is a unit that had corn
+            grainLoad += GlobalData.grainsPerUnit;
+        
+        
         wsClient.SendCapacidad(grainLoad);
         
         isMoving = false; 

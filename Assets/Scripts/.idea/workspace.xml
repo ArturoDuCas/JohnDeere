@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df10e521-ff49-429e-86b2-6a301db64f38" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/Models/Materials/girders-1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/Models/Materials/girders-1.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/Models/Materials/storage-1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/Models/Materials/storage-1.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/Textures/ground 8.mat" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/Textures/ground 8.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/sceneSettings.lighting" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/sceneSettings.lighting" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/sceneSettings.lighting.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/sceneSettings.lighting.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/storage_building-1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/storage_building-1.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assets_StorageBuilding/storage_building-2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../Assets_StorageBuilding/storage_building-2.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GlobalData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GlobalData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Truck.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Truck.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WS_Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/WS_Client.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +53,7 @@
       <updated>1693790177042</updated>
       <workItem from="1693790191405" duration="1328000" />
       <workItem from="1693885411318" duration="649000" />
-      <workItem from="1693998954152" duration="2194000" />
+      <workItem from="1693998954152" duration="4028000" />
     </task>
     <servers />
   </component>

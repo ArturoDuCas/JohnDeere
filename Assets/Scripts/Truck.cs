@@ -24,17 +24,23 @@ public class Truck : MonoBehaviour
     public bool isGoingToFinish = false; 
         
         
-    private int grainCapacity = 10; 
+    public  int grainCapacity = 20; 
     public int grainLoad = 0;
     
     public bool isAviable = true;
-    public int targetHarvester; 
+    public int targetHarvester;
+
+    public bool isReturning = false; // To know if it is returning to the storage or not
+    
+    private WS_Client wsClient; 
     void Start()
     {
+        wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
     }
 
     void Update()
     {
+        
         if (path.Count == 0 ) // if there is no path, return
         {
             if (isGoingToFinish) {
@@ -93,6 +99,11 @@ public class Truck : MonoBehaviour
         path.RemoveAt(0);
     }
 
+    public void GoToSilos()
+    {
+        wsClient.SendTruckToSilos(currentRow, currentCol, id);    
+    }
+    
     public void PutOnPosition(int row, int col)
     {
         if (col == -1) // starting on the left side

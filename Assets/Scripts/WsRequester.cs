@@ -26,7 +26,6 @@ public class WsRequester : MonoBehaviour
 
         if (!isDataSent)
         {
-            Debug.Log("Soy el harvester y estoy enviando mis datos iniciales");
             wsClient.SendInitialHarvesterData();
             isDataSent = true;
         }

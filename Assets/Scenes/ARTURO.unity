@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 2644440315228679228, guid: 0136d9deccfb85241a1398d82b5824c3, type: 3}
+  roadPrefab: {fileID: 7871129362082915793, guid: 47a8908b459b4424aa0b278123afcdaa, type: 3}
   harvesterPrefab: {fileID: 751609630328389092, guid: 9b8b62b51d0b5494b890d39146740e34, type: 3}
   truckPrefab: {fileID: 2398579873181187673, guid: 32dacda4824d67b4aad662ac6795d32d, type: 3}
 --- !u!4 &225651407

@@ -30,7 +30,7 @@ public class WS_Client : MonoBehaviour
 
     void Awake()
     {
-        ws = new WebSocket("ws://localhost:8082");
+        ws = new WebSocket("ws://localhost:8080");
         fieldController = FindObjectOfType<FieldController>();
     }
     void Start()
@@ -129,87 +129,104 @@ public class WS_Client : MonoBehaviour
                 // first line: harvester id
                 // second line: trucks ids
                 // the rest: paths of the trucks 
-                
+
                 string[] lines = message.data.Split('\n');
-                int harvesterId = int.Parse(lines[0]); 
+                int harvesterId = int.Parse(lines[0]);
                 List<int> truckOptions = JsonConvert.DeserializeObject<List<int>>(lines[1]);
-                List<string> truckOptionsPaths = new List<string>(); 
-                
-                
-                
+                List<string> truckOptionsPaths = new List<string>();
+
+
+
                 // create the list of the paths
-                for(int i = 2; i < lines.Length; i++)
+                for (int i = 2; i < lines.Length; i++)
                 {
                     truckOptionsPaths.Add(lines[i]);
                 }
-                
-                
+
+
                 // fix the truck options for eliminating those with path == [] 
                 List<int> validTruckOptions = new List<int>();
                 for (int i = 0; i < truckOptions.Count; i++)
                 {
-                    if(truckOptionsPaths[truckOptions[i]].Length > 4)
+                    if (truckOptionsPaths[truckOptions[i]].Length > 4)
                     {
                         validTruckOptions.Add(truckOptions[i]);
                     }
                 }
-                
-                
+
+
                 // get the shortest path
                 int truckWithMinRoute = validTruckOptions[0];
                 int minRouteSize = truckOptionsPaths[truckWithMinRoute].Length;
-                
-                for(int i = 0; i < validTruckOptions.Count; i++)
+
+                for (int i = 0; i < validTruckOptions.Count; i++)
                 {
-                    if(truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
+                    if (truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
                     {
                         truckWithMinRoute = validTruckOptions[i];
                         minRouteSize = truckOptionsPaths[validTruckOptions[i]].Length;
                     }
                 }
-                
+
                 validTruckOptions.Remove(truckWithMinRoute);
-                
+
                 // if is not aviable, find the next min route
                 while (!GlobalData.trucks[truckWithMinRoute].isAviable)
                 {
-                    if(validTruckOptions.Count == 0) // No hay trucks disponibles
+                    if (validTruckOptions.Count == 0) // No hay trucks disponibles
                     {
                         break;
                     }
-                    
+
                     truckWithMinRoute = validTruckOptions[0];
                     minRouteSize = truckOptionsPaths[truckWithMinRoute].Length;
                     for (int i = 0; i < validTruckOptions.Count; i++)
                     {
-                        if(truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
+                        if (truckOptionsPaths[validTruckOptions[i]].Length < minRouteSize)
                         {
                             truckWithMinRoute = validTruckOptions[i];
                             minRouteSize = truckOptionsPaths[validTruckOptions[i]].Length;
                         }
                     }
-                    
+
                     validTruckOptions.Remove(truckWithMinRoute);
                 }
 
-                
-                if(GlobalData.trucks[truckWithMinRoute].isAviable)
+
+                if (GlobalData.trucks[truckWithMinRoute].isAviable)
                 {
                     GlobalData.trucks[truckWithMinRoute].targetHarvester = harvesterId;
                     List<Vector2> path = ConvertStringToVector2List(truckOptionsPaths[truckWithMinRoute]);
-                    
-                    GlobalData.trucks[truckWithMinRoute].path = path;
-                    
-                    GlobalData.trucks[truckWithMinRoute].isAviable = false;
+
+                    if (GlobalData.trucks[truckWithMinRoute].isAviable)
+                    {
+                        GlobalData.trucks[truckWithMinRoute].isAviable = false;
+                        GlobalData.trucks[truckWithMinRoute].path = path;
+                    }
+                    else // TODO: Si no esta disponible, que el harvester pida otra ruta
+                    {
+                        
+                    }
                 }
                 else // TODO: Si no esta disponible, que el harvester pida otra ruta
                 {
-                    
+                    Debug.Log("No hay ningun harvester disponible");
                 }
-
                 
+            } else if (message.type == "truck_to_silos")
+            {
+                // first line = truck id
+                // second line = path
+                
+                string[] lines = message.data.Split('\n');
+                int truckId = int.Parse(lines[0]);
+                List<Vector2> path = ConvertStringToVector2List(lines[1]);
+                
+                // probar si funciona
+                GlobalData.trucks[truckId].path = path;
+                GlobalData.trucks[truckId].isAviable = false;
             }
-            
+
         };
         
         ws.Connect();
@@ -490,10 +507,32 @@ for (int i = 0; i < list.Count; i++)
         ws.Send(jsonMessage); 
     }
 
+    public void SendTruckToSilos(int row, int col, int id)
+    {
+        string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
+        string finalPosition =  "[" + GlobalData.storageRow.ToString() + "," + GlobalData.storageCol.ToString() + "]";
+        string truckInitialPos = "[" + (row+1) + "," + (col+1) + "]";
+    
+        
+        var message = new Msg_SendTruckToSilos
+        {
+            type = "send-truck-to-silos",
+            finalPos = finalPosition,
+            fieldMatrix = fieldMatrixJson,
+            truckInitialPos = truckInitialPos, 
+            truckId = id.ToString()
+            
+        };
+        
+        var jsonMessage = JsonUtility.ToJson(message);
+
+        Debug.Log(jsonMessage); 
+        
+        ws.Send(jsonMessage); 
+    }
+
     public void SendHarvesterUnloadRequest(int finalRow, int finalCol, int id)
     {
-        
-        
         string fieldMatrixJson = MatrixToJson(GlobalData.fieldMatrix);
         string finalPosition =  "[" + finalRow.ToString() + "," + finalCol.ToString() + "]";
         

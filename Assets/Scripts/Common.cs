@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public static class Common 
 {
@@ -96,6 +97,14 @@ public static class Common
 
 
         return res; 
+    }
+
+    public static void DeleteAllHarvesterPaths()
+    {
+        for(int i = 0; i < GlobalData.harvesters.Length; i++)
+        {
+            GlobalData.harvesters[i].path = new List<Vector2>(); 
+        }
     }
     
 }

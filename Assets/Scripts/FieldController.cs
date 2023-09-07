@@ -4,6 +4,7 @@ using UnityEngine;
 public class FieldController : MonoBehaviour
 {
     public GameObject unitPrefab;  // Corn section prefab
+    public GameObject roadPrefab; // Road prefab
     public GameObject harvesterPrefab; // Harvester prefab
     public GameObject truckPrefab; // Truck prefab
 
@@ -18,10 +19,59 @@ public class FieldController : MonoBehaviour
         wsClient = FindObjectOfType<WS_Client>(); 
         
         CreateField();
+        CreateRoad(); 
         UpdateParentPosition();
+        InstantiateSilos(); 
         OnDensityChange(); 
         InstantiateHarvestersAndTrucks();
 
+    }
+
+    void InstantiateSilos()
+    {
+        // get all the elements that starts with Road(
+        GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
+        
+        
+        // get one randomly 
+        System.Random random = new System.Random();
+        int index = random.Next(0, roads.Length);
+        GameObject road = roads[index];
+        
+        // instanitate the silos 
+        road.GetComponent<Road>().SpawnBuilding();
+    }
+
+    void CreateRoad()
+    {
+        Debug.Log("hola"); 
+        // road on the left 
+        for(int i = -1; i <= GlobalData.fieldRows; i++)
+        {
+            GameObject road = Instantiate(roadPrefab, new Vector3(-GlobalData.unit_xSize, 0, i * GlobalData.unit_zSize), Quaternion.identity, transform);
+            road.name = $"Road({i}, -1)";
+        }
+        
+        // road on the bottom
+        for(int i = 0; i < GlobalData.fieldCols; i++)
+        {
+            GameObject road = Instantiate(roadPrefab, new Vector3(i * GlobalData.unit_xSize, 0, -GlobalData.unit_zSize), Quaternion.identity, transform);
+            road.name = $"Road(-1, {i})";
+        }
+        
+        // road on the right
+        for(int i = -1; i < GlobalData.fieldRows + 1; i++)
+        {
+            GameObject road = Instantiate(roadPrefab, new Vector3(GlobalData.fieldRows * GlobalData.unit_xSize, 0, i * GlobalData.unit_zSize), Quaternion.identity, transform);
+            road.name = $"Road({i}, {GlobalData.fieldRows})";
+        }
+        
+        // road on the top
+        for(int i = 0; i < GlobalData.fieldCols; i++)
+        {
+            GameObject road = Instantiate(roadPrefab, new Vector3(i * GlobalData.unit_xSize, 0, GlobalData.fieldCols * GlobalData.unit_zSize), Quaternion.identity, transform);
+            road.name = $"Road({GlobalData.fieldCols}, {i})";
+        }
     }
 
     void AddRandomUnit()
@@ -68,6 +118,7 @@ public class FieldController : MonoBehaviour
     
     void OnDensityChange()
     {
+        
         int numOfNotHarvestedUnits = Common.GetNumberOfNotHarvestedUnits(); 
         int numOfHarvestedUnits = GlobalData.fieldRows * GlobalData.fieldCols - numOfNotHarvestedUnits;
         int numOfTotalUnits = numOfHarvestedUnits + numOfNotHarvestedUnits;
@@ -92,6 +143,15 @@ public class FieldController : MonoBehaviour
             {
                 DeleteRandomUnit();
             }
+        }
+        
+        // Recalculate the paths for the harvester
+        if (GlobalData.isFirstDensityChange)
+        {
+            GlobalData.isFirstDensityChange = false; 
+        } else
+        {
+            wsClient.SendInitialHarvesterData();
         }
     }
 
@@ -208,11 +268,7 @@ public class FieldController : MonoBehaviour
         GlobalData.trucks = trucks;
         
     }
-
-    void AssignRouteToHarvesters()
-    {
-        // TODO: Asignar la ruta a cada harvester
-    }
+    
 
     void CreateGlobalMatrix()
     {
@@ -260,16 +316,21 @@ public class FieldController : MonoBehaviour
         {
             if (GlobalData.cornDensity < 100)
             {
-                GlobalData.cornDensity += 10; 
+                GlobalData.cornDensity += 5; 
             }
+            Common.DeleteAllHarvesterPaths();
             OnDensityChange();
         } else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (GlobalData.cornDensity > 0)
             {
-                GlobalData.cornDensity -= 10; 
+                GlobalData.cornDensity -= 5; 
             }
+            Common.DeleteAllHarvesterPaths();
             OnDensityChange();
+        } else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Common.printMatrix(GlobalData.fieldMatrix);
         }
 
     }
