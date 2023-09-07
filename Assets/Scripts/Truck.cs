@@ -35,29 +35,52 @@ public class Truck : MonoBehaviour
     private WS_Client wsClient; 
     void Start()
     {
+        grainCapacity = 20; // TODO: Eliminar esto
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
     }
 
     void Update()
     {
-        
-        if (path.Count == 0 ) // if there is no path, return
-        {
-            if (isGoingToFinish) {
-                UnloadGrain();
-                isGoingToFinish = false;
-            }
-            return;
-        }
-        
         if(fuel <= 0) // if fuel is over, stop moving
-        {
             return;
-        }
         
-        if (!isMoving) // if the truck is not moving
+        
+        
+        if (isReturning) // Si esta llendo al almacen
         {
-            GetMovement(); 
+            Debug.Log(path.Count); 
+            if(path.Count == 0) // Si ya llego al almacen
+            {
+                isReturning = false;
+                isAviable = true;
+                grainLoad = 0;
+                return;
+            }
+            
+            if (!isMoving) // if the truck is not moving
+            {
+                GetFixedMovement(); 
+            }
+            
+            
+        }
+        else
+        {
+            if (path.Count == 0 ) // if there is no path, return
+            {
+                if (isGoingToFinish) {
+                    UnloadGrain();
+                    isGoingToFinish = false;
+                }
+                return;
+            }
+            
+        
+            if (!isMoving) // if the truck is not moving
+            {
+                GetMovement(); 
+            }
+
         }
         
     }
@@ -68,6 +91,37 @@ public class Truck : MonoBehaviour
         GlobalData.harvesters[targetHarvester].UnloadGrain(id);
         isAviable = true;
     }
+    
+    void GetFixedMovement()
+    {
+        isMoving = true;
+
+        int fixedCol = currentCol + 1; 
+        int fixedRow = currentRow + 1;
+        
+        
+        if (fixedCol < path[0].y) // Se mueve a la derecha
+        {
+            MoveRight(); 
+        } else if (fixedCol > path[0].y) // Se mueve a la izquierda
+        {
+            MoveLeft(); 
+        } else if (fixedRow < path[0].x) // Se mueve hacia arriba
+        {
+            MoveUp(); 
+        } else if (fixedRow > path[0].x) // Se mueve hacia abajo
+        {
+            MoveDown(); 
+        }
+        else
+        {
+            isMoving = false;
+        }
+        
+        // Remove the first element of the array
+        path.RemoveAt(0);
+    }
+    
     void GetMovement()
     {
         if (path.Count == 1)

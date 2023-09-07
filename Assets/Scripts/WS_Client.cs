@@ -225,6 +225,7 @@ public class WS_Client : MonoBehaviour
                 // probar si funciona
                 GlobalData.trucks[truckId].path = path;
                 GlobalData.trucks[truckId].isAviable = false;
+                GlobalData.trucks[truckId].isReturning = true; 
             }
 
         };

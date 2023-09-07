@@ -24,6 +24,9 @@ public class Road : MonoBehaviour
         GlobalData.storageRow = int.Parse(coords[0]) + 1;
         GlobalData.storageCol = int.Parse(coords[1]) + 1;
         
+        Debug.Log("Storage row: " + GlobalData.storageRow);
+        Debug.Log("Storage col: " + GlobalData.storageCol);
+        
         // instantiate the building 
         building = Instantiate(buildingPrefab, transform.position, Quaternion.identity);
         
