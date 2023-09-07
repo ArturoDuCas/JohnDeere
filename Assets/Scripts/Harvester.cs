@@ -11,6 +11,9 @@ public class Harvester : MonoBehaviour
 
     public int id;
     
+    public bool mustGoToInitialPos = false;
+    public bool isAboutToFinishPath = false;
+    
     private float movementSpeed = 4.0f;
     private float actualSpeed; 
 
@@ -28,7 +31,7 @@ public class Harvester : MonoBehaviour
     public bool isMoving = false; 
     public bool finishedPath = false;
 
-    public int grainCapacity = 20; 
+    public int grainCapacity; 
     public int grainLoad = 0;
 
     public bool isWaitingForTruck = false; 
@@ -60,6 +63,8 @@ public class Harvester : MonoBehaviour
         
 
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
+
+        grainCapacity = 25; 
     }
 
     bool verifyTruckAviability()
@@ -79,6 +84,40 @@ public class Harvester : MonoBehaviour
 
     void Update()
     {
+        if (isAboutToFinishPath)
+        {
+                List<int> num_harv = new List<int>();
+
+
+                for(int i = 0; i < GlobalData.harvesters.Length; i++){
+                    if( !GlobalData.harvesters[i].finishedPath ){
+                        if (i != id)
+                        {
+                            num_harv.Add(i);
+                        }
+                    }
+                }
+
+                if(num_harv.Count >= 1){
+                    List<Vector2> otra_path = new List<Vector2>(GlobalData.harvesters[num_harv[0]].path);
+                    otra_path.Reverse(); 
+                    path = otra_path;
+                }
+        
+                
+                isAboutToFinishPath = false;
+                return;
+        }
+        
+        if (mustGoToInitialPos)
+        {
+            if (!isMoving)
+            {
+                newMovement();
+            }
+            
+            return; 
+        }
 
         if (fuel <= 0) // if fuel is over, stop moving
             return;
@@ -99,30 +138,6 @@ public class Harvester : MonoBehaviour
         
         if (path.Count == 0)
         {
-            // ayudando_harvester = true; 
-
-            List<int> num_harv = new List<int>();
-
-            Debug.Log("Entra al otro elsee ------------- ");
-
-            for(int i = 0; i < GlobalData.harvesters.Length; i++){
-                Debug.Log("ENTRA AL FOR");
-
-                if( !GlobalData.harvesters[i].finishedPath ){
-                    num_harv.Add(GlobalData.harvesters[i].id);
-                }
-            }
-
-            if(num_harv.Count >= 1){
-            
-                // finishedPath = false; 
-                // HelpHarvester(GlobalData.harvesters[num_harv[0]].path);
-                
-                List<Vector2> otra_path = GlobalData.harvesters[num_harv[0]].path;
-                otra_path.Reverse(); 
-                path = otra_path;
-            
-            }
             return;
         }
         
@@ -181,6 +196,33 @@ public class Harvester : MonoBehaviour
         
     }
 
+    void newMovement()
+    {
+        Debug.Log("entre a la funcion");
+        int targetRow = Mathf.RoundToInt(path[0].x);
+        int targetCol = Mathf.RoundToInt(path[0].y); 
+        
+        if(currentCol < targetCol) // Se mueve a la derecha
+        {
+            HarvestRight(); 
+        } else if (currentCol > targetCol) // Se mueve a la izquierda
+        {
+            HarvestLeft(); 
+        } else if (currentRow < targetRow) // Se mueve hacia arriba
+        {
+            HarvestUp(); 
+        } else if (currentRow > targetRow) // Se mueve hacia abajo
+        {
+            HarvestDown(); 
+        }
+        
+        if (currentRow == targetRow && currentCol == targetCol)
+        {
+            path.RemoveAt(0); 
+            mustGoToInitialPos = false;
+        }
+        
+    }
     // void HelpHarvester(List<Vector2> new_path){
     //     new_path.Reverse(); 
 
@@ -266,6 +308,9 @@ public class Harvester : MonoBehaviour
             finishedPath = true;
             ayudando_harvester = true; 
             return; 
+        } else if (path.Count == 1)
+        {
+            isAboutToFinishPath = true;
         }
         
         lastPos = new Vector2(currentRow, currentCol); 

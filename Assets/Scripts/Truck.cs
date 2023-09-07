@@ -35,7 +35,7 @@ public class Truck : MonoBehaviour
     private WS_Client wsClient; 
     void Start()
     {
-        grainCapacity = 20; // TODO: Eliminar esto
+        grainCapacity = 25; // TODO: Eliminar esto
         wsClient = FindObjectOfType<WS_Client>(); // Find the WebSocket client script
         
     }

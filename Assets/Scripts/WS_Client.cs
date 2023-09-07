@@ -480,6 +480,9 @@ for (int i = 0; i < list.Count; i++)
                 fieldMatrix = fieldMatrixJson
             };
             
+            var jsonMessage = JsonUtility.ToJson(message);
+            ws.Send(jsonMessage); 
+            
         }
         else // si es con 2 harvesters
         {

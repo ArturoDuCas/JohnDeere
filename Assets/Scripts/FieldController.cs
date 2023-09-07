@@ -21,11 +21,11 @@ public class FieldController : MonoBehaviour
         CreateField();
         CreateRoad(); 
         UpdateParentPosition();
-        InstantiateSilos(); 
         OnDensityChange(); 
         InstantiateHarvestersAndTrucks();
+        InstantiateSilos(); 
         
-        InvokeRepeating("MakeHarvestersAskForHelp", 0f, 5f);
+        // InvokeRepeating("MakeHarvestersAskForHelp", 0f, 5f);
     }
     
     void MakeHarvestersAskForHelp()
@@ -50,12 +50,13 @@ public class FieldController : MonoBehaviour
         GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
         
         
-        // get one randomly 
-        System.Random random = new System.Random();
-        int index = random.Next(0, roads.Length);
-        GameObject road = roads[index];
+        // Get the starting position of the first harvester     
+        int row= GlobalData.harvesters[0].currentRow;
+        int col = GlobalData.harvesters[0].currentCol;
         
-        // instanitate the silos 
+        // find a road by name 
+        GameObject road = GameObject.Find($"Road({row}, {col})");
+        
         road.GetComponent<Road>().SpawnBuilding();
     }
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 public static class GlobalData
 {
     // Field data
-    public static int fieldCols = 8 ; //Se asigna en WS_Client
-    public static int fieldRows = 8; //Se asigna en WS_Client
+    public static int fieldCols = 5 ; //Se asigna en WS_Client
+    public static int fieldRows = 5; //Se asigna en WS_Client
     public static int[,] fieldMatrix; // 0 = harvested, 1 = not-harvested, 2 = harvesting
 
     
@@ -34,6 +34,6 @@ public static class GlobalData
     
     
     // Density related
-    public static int cornDensity = 80; // 0 - 100% 
+    public static int cornDensity = 100; // 0 - 100% 
     public static bool isFirstDensityChange = true; 
 }
