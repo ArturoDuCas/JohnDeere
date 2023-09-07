@@ -20,7 +20,6 @@ public class WS_Client : MonoBehaviour
     FieldController fieldController;
     public Harvester harvester; 
     public TextMeshProUGUI idText;
-     public SceneChanger sceneChanger;
 
     [System.Serializable]
     private class FieldMatrixMessage
@@ -41,12 +40,6 @@ public class WS_Client : MonoBehaviour
         ws.OnMessage += (sender, e) =>
         {
             Message message = JsonUtility.FromJson<Message>(e.Data);
-            if (message.type == "ChangeScene")
-            {
-                // Extract the scene name from the message and change to that scene
-                string sceneName = message.data;
-                sceneChanger.ChangeToScene(sceneName);
-            }
             if (message.type == "connection_info")
             {
                 Debug.Log("ID: " + message.data);

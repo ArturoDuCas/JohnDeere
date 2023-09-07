@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DANIELA.unity
     guid: 10ee0269c94201b41ae05cbd70180b25
+  - enabled: 1
+    path: Assets/Scenes/pruebaConArturo.unity
+    guid: cf4c83f01bf15894a877ff84b5bffab5
   m_configObjects: {}
