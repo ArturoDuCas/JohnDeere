@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - terrain2
+  - Road
   layers:
   - Default
   - TransparentFX
